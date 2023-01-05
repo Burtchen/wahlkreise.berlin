@@ -1,0 +1,840 @@
+[
+  [
+    {
+      "title": "Wahlausgang 2021"
+    },
+    {
+      "Wahlkreis": 76,
+      "Wahlberechtigte": 235647,
+      "Abweichung": 1.45,
+      "CDU": 23045,
+      "DIE LINKE": 29559,
+      "SPD": 39131,
+      "GRÜNE": 46401,
+      "AfD": 16242,
+      "FDP": 12515
+    },
+    {
+      "Wahlkreis": 77,
+      "Wahlberechtigte": 176585,
+      "Abweichung": -1.42,
+      "CDU": 34233,
+      "DIE LINKE": 6107,
+      "SPD": 32445,
+      "GRÜNE": 17621,
+      "AfD": 12249,
+      "FDP": 10927
+    },
+    {
+      "Wahlkreis": 78,
+      "Wahlberechtigte": 180251,
+      "Abweichung": -1.24,
+      "CDU": 28904,
+      "DIE LINKE": 6771,
+      "SPD": 40451,
+      "GRÜNE": 14680,
+      "AfD": 12447,
+      "FDP": 10492
+    },
+    {
+      "Wahlkreis": 79,
+      "Wahlberechtigte": 217814,
+      "Abweichung": 0.59,
+      "CDU": 48959,
+      "DIE LINKE": 7455,
+      "SPD": 43465,
+      "GRÜNE": 38873,
+      "AfD": 9221,
+      "FDP": 15967
+    },
+    {
+      "Wahlkreis": 80,
+      "Wahlberechtigte": 196800,
+      "Abweichung": -0.43,
+      "CDU": 34308,
+      "DIE LINKE": 8802,
+      "SPD": 42934,
+      "GRÜNE": 37531,
+      "AfD": 6539,
+      "FDP": 14982
+    },
+    {
+      "Wahlkreis": 81,
+      "Wahlberechtigte": 231500,
+      "Abweichung": 1.25,
+      "CDU": 38400,
+      "DIE LINKE": 10673,
+      "SPD": 47451,
+      "GRÜNE": 44021,
+      "AfD": 10005,
+      "FDP": 12822
+    },
+    {
+      "Wahlkreis": 82,
+      "Wahlberechtigte": 197037,
+      "Abweichung": -0.42,
+      "CDU": 25577,
+      "DIE LINKE": 17898,
+      "SPD": 35530,
+      "GRÜNE": 27104,
+      "AfD": 10153,
+      "FDP": 8635
+    },
+    {
+      "Wahlkreis": 83,
+      "Wahlberechtigte": 220014,
+      "Abweichung": 0.69,
+      "CDU": 13030,
+      "DIE LINKE": 30113,
+      "SPD": 29619,
+      "GRÜNE": 64542,
+      "AfD": 6598,
+      "FDP": 9203
+    },
+    {
+      "Wahlkreis": 84,
+      "Wahlberechtigte": 207127,
+      "Abweichung": 0.07,
+      "CDU": 21142,
+      "DIE LINKE": 55372,
+      "SPD": 24133,
+      "GRÜNE": 16137,
+      "AfD": 17817,
+      "FDP": 9235
+    },
+    {
+      "Wahlkreis": 85,
+      "Wahlberechtigte": 197988,
+      "Abweichung": -0.38,
+      "CDU": 39543,
+      "DIE LINKE": 29388,
+      "SPD": 19892,
+      "GRÜNE": 8316,
+      "AfD": 20910,
+      "FDP": 6180
+    },
+    {
+      "Wahlkreis": 86,
+      "Wahlberechtigte": 200673,
+      "Abweichung": -0.25,
+      "CDU": 17695,
+      "DIE LINKE": 36813,
+      "SPD": 28040,
+      "GRÜNE": 19485,
+      "AfD": 17356,
+      "FDP": 8682
+    }
+  ],
+  [
+    {
+      "title": "Variante 1"
+    },
+    {
+      "Wahlkreis": 76,
+      "Wahlberechtigte": 221416,
+      "Abweichung": -0.14,
+      "CDU": 20179,
+      "DIE LINKE": 29611,
+      "SPD": 34108,
+      "GRÜNE": 44094,
+      "AfD": 14767,
+      "FDP": 11574
+    },
+    {
+      "Wahlkreis": 77,
+      "Wahlberechtigte": 214294,
+      "Abweichung": -0.45,
+      "CDU": 32681,
+      "DIE LINKE": 16357,
+      "SPD": 38315,
+      "GRÜNE": 28383,
+      "AfD": 15139,
+      "FDP": 12262
+    },
+    {
+      "Wahlkreis": 78,
+      "Wahlberechtigte": 218691,
+      "Abweichung": -0.26,
+      "CDU": 38106,
+      "DIE LINKE": 7451,
+      "SPD": 47403,
+      "GRÜNE": 17890,
+      "AfD": 15529,
+      "FDP": 13082
+    },
+    {
+      "Wahlkreis": 79,
+      "Wahlberechtigte": 217814,
+      "Abweichung": -0.3,
+      "CDU": 48959,
+      "DIE LINKE": 7455,
+      "SPD": 43465,
+      "GRÜNE": 38873,
+      "AfD": 9221,
+      "FDP": 15967
+    },
+    {
+      "Wahlkreis": 80,
+      "Wahlberechtigte": 217663,
+      "Abweichung": -0.3,
+      "CDU": 36865,
+      "DIE LINKE": 9992,
+      "SPD": 47051,
+      "GRÜNE": 40113,
+      "AfD": 7702,
+      "FDP": 16140
+    },
+    {
+      "Wahlkreis": 81,
+      "Wahlberechtigte": 231500,
+      "Abweichung": 0.31,
+      "CDU": 38400,
+      "DIE LINKE": 10673,
+      "SPD": 47451,
+      "GRÜNE": 44021,
+      "AfD": 10005,
+      "FDP": 12822
+    },
+    {
+      "Wahlkreis": 82,
+      "Wahlberechtigte": 233026,
+      "Abweichung": 0.38,
+      "CDU": 28242,
+      "DIE LINKE": 28405,
+      "SPD": 39389,
+      "GRÜNE": 31563,
+      "AfD": 12342,
+      "FDP": 9800
+    },
+    {
+      "Wahlkreis": 83,
+      "Wahlberechtigte": 239004,
+      "Abweichung": 0.65,
+      "CDU": 14681,
+      "DIE LINKE": 36778,
+      "SPD": 31873,
+      "GRÜNE": 59585,
+      "AfD": 9458,
+      "FDP": 9542
+    },
+    {
+      "Wahlkreis": 84,
+      "Wahlberechtigte": 236126,
+      "Abweichung": 0.52,
+      "CDU": 23850,
+      "DIE LINKE": 57834,
+      "SPD": 29592,
+      "GRÜNE": 20571,
+      "AfD": 20237,
+      "FDP": 11002
+    },
+    {
+      "Wahlkreis": 85,
+      "Wahlberechtigte": 231902,
+      "Abweichung": 0.33,
+      "CDU": 42873,
+      "DIE LINKE": 34395,
+      "SPD": 24444,
+      "GRÜNE": 9618,
+      "AfD": 25137,
+      "FDP": 7449
+    },
+    {
+      "Wahlkreis": 86
+    }
+  ],
+  [
+    {
+      "title": "Variante 2"
+    },
+    {
+      "Wahlkreis": 76
+    },
+    {
+      "Wahlkreis": 77,
+      "Wahlberechtigte": 223079,
+      "Abweichung": -0.06,
+      "CDU": 32732,
+      "DIE LINKE": 17880,
+      "SPD": 39444,
+      "GRÜNE": 28780,
+      "AfD": 16300,
+      "FDP": 12463
+    },
+    {
+      "Wahlkreis": 78,
+      "Wahlberechtigte": 226820,
+      "Abweichung": 0.11,
+      "CDU": 39864,
+      "DIE LINKE": 7725,
+      "SPD": 49224,
+      "GRÜNE": 19244,
+      "AfD": 15962,
+      "FDP": 13825
+    },
+    {
+      "Wahlkreis": 79,
+      "Wahlberechtigte": 217814,
+      "Abweichung": -0.3,
+      "CDU": 48959,
+      "DIE LINKE": 7455,
+      "SPD": 43465,
+      "GRÜNE": 38873,
+      "AfD": 9221,
+      "FDP": 15967
+    },
+    {
+      "Wahlkreis": 80,
+      "Wahlberechtigte": 217663,
+      "Abweichung": -0.3,
+      "CDU": 36865,
+      "DIE LINKE": 9992,
+      "SPD": 47051,
+      "GRÜNE": 40113,
+      "AfD": 7702,
+      "FDP": 16140
+    },
+    {
+      "Wahlkreis": 81,
+      "Wahlberechtigte": 231500,
+      "Abweichung": 0.31,
+      "CDU": 38400,
+      "DIE LINKE": 10673,
+      "SPD": 47451,
+      "GRÜNE": 44021,
+      "AfD": 10005,
+      "FDP": 12822
+    },
+    {
+      "Wahlkreis": 82,
+      "Wahlberechtigte": 222513,
+      "Abweichung": -0.09,
+      "CDU": 26717,
+      "DIE LINKE": 20873,
+      "SPD": 38931,
+      "GRÜNE": 37057,
+      "AfD": 10513,
+      "FDP": 9527
+    },
+    {
+      "Wahlkreis": 83,
+      "Wahlberechtigte": 235197,
+      "Abweichung": 0.48,
+      "CDU": 14199,
+      "DIE LINKE": 33813,
+      "SPD": 31687,
+      "GRÜNE": 70531,
+      "AfD": 7411,
+      "FDP": 10514
+    },
+    {
+      "Wahlkreis": 84,
+      "Wahlberechtigte": 215764,
+      "Abweichung": -0.39,
+      "CDU": 22041,
+      "DIE LINKE": 56892,
+      "SPD": 25448,
+      "GRÜNE": 18000,
+      "AfD": 18317,
+      "FDP": 9763
+    },
+    {
+      "Wahlkreis": 85,
+      "Wahlberechtigte": 223845,
+      "Abweichung": -0.03,
+      "CDU": 41971,
+      "DIE LINKE": 33731,
+      "SPD": 23522,
+      "GRÜNE": 10009,
+      "AfD": 23548,
+      "FDP": 7425
+    },
+    {
+      "Wahlkreis": 86,
+      "Wahlberechtigte": 232616,
+      "Abweichung": 0.36,
+      "CDU": 21926,
+      "DIE LINKE": 38596,
+      "SPD": 34528,
+      "GRÜNE": 24807,
+      "AfD": 20213,
+      "FDP": 10520
+    }
+  ],
+  [
+    {
+      "title": "Variante 3"
+    },
+    {
+      "Wahlkreis": 76,
+      "Wahlberechtigte": 218559,
+      "Abweichung": -0.26,
+      "CDU": 19458,
+      "DIE LINKE": 28466,
+      "SPD": 35085,
+      "GRÜNE": 46819,
+      "AfD": 13946,
+      "FDP": 11225
+    },
+    {
+      "Wahlkreis": 77,
+      "Wahlberechtigte": 209740,
+      "Abweichung": -0.66,
+      "CDU": 38826,
+      "DIE LINKE": 9290,
+      "SPD": 38464,
+      "GRÜNE": 21924,
+      "AfD": 15136,
+      "FDP": 13097
+    },
+    {
+      "Wahlkreis": 78,
+      "Wahlberechtigte": 220911,
+      "Abweichung": -0.16,
+      "CDU": 39988,
+      "DIE LINKE": 7708,
+      "SPD": 49042,
+      "GRÜNE": 21414,
+      "AfD": 13502,
+      "FDP": 14777
+    },
+    {
+      "Wahlkreis": 79,
+      "Wahlberechtigte": 217814,
+      "Abweichung": -0.3,
+      "CDU": 48959,
+      "DIE LINKE": 7455,
+      "SPD": 43465,
+      "GRÜNE": 38873,
+      "AfD": 9221,
+      "FDP": 15967
+    },
+    {
+      "Wahlkreis": 80,
+      "Wahlberechtigte": 228184,
+      "Abweichung": 0.17,
+      "CDU": 30921,
+      "DIE LINKE": 12046,
+      "SPD": 50462,
+      "GRÜNE": 54894,
+      "AfD": 6720,
+      "FDP": 14027
+    },
+    {
+      "Wahlkreis": 81,
+      "Wahlberechtigte": 229159,
+      "Abweichung": 0.21,
+      "CDU": 37064,
+      "DIE LINKE": 15145,
+      "SPD": 42309,
+      "GRÜNE": 29743,
+      "AfD": 11699,
+      "FDP": 11207
+    },
+    {
+      "Wahlkreis": 82,
+      "Abweichung": -10
+    },
+    {
+      "Wahlkreis": 83,
+      "Wahlberechtigte": 236172,
+      "Abweichung": 0.52,
+      "CDU": 13600,
+      "DIE LINKE": 33510,
+      "SPD": 32660,
+      "GRÜNE": 68175,
+      "AfD": 6746,
+      "FDP": 9061
+    },
+    {
+      "Wahlkreis": 84,
+      "Wahlberechtigte": 203409,
+      "Abweichung": -0.94,
+      "CDU": 28810,
+      "DIE LINKE": 36902,
+      "SPD": 29829,
+      "GRÜNE": 13599,
+      "AfD": 17969,
+      "FDP": 10918
+    },
+    {
+      "Wahlkreis": 85,
+      "Wahlberechtigte": 231947,
+      "Abweichung": 0.33,
+      "CDU": 43282,
+      "DIE LINKE": 39470,
+      "SPD": 23975,
+      "GRÜNE": 11209,
+      "AfD": 23575,
+      "FDP": 7845
+    },
+    {
+      "Wahlkreis": 86,
+      "Wahlberechtigte": 236662,
+      "Abweichung": 0.54,
+      "CDU": 20360,
+      "DIE LINKE": 47320,
+      "SPD": 31899,
+      "GRÜNE": 23944,
+      "AfD": 19545,
+      "FDP": 9847
+    }
+  ],
+  [
+    {
+      "title": "Variante 4"
+    },
+    {
+      "Wahlkreis": 76,
+      "Wahlberechtigte": 218559,
+      "Abweichung": -0.26,
+      "CDU": 19458,
+      "DIE LINKE": 28466,
+      "SPD": 35085,
+      "GRÜNE": 46819,
+      "AfD": 13946,
+      "FDP": 11225
+    },
+    {
+      "Wahlkreis": 77,
+      "Wahlberechtigte": 209740,
+      "Abweichung": -0.66,
+      "CDU": 38826,
+      "DIE LINKE": 9290,
+      "SPD": 38464,
+      "GRÜNE": 21924,
+      "AfD": 15136,
+      "FDP": 13097
+    },
+    {
+      "Wahlkreis": 78,
+      "Wahlberechtigte": 221371,
+      "Abweichung": -0.14,
+      "CDU": 37069,
+      "DIE LINKE": 8590,
+      "SPD": 49903,
+      "GRÜNE": 24572,
+      "AfD": 13311,
+      "FDP": 13856
+    },
+    {
+      "Wahlkreis": 79,
+      "Wahlberechtigte": 217814,
+      "Abweichung": -0.3,
+      "CDU": 48959,
+      "DIE LINKE": 7455,
+      "SPD": 43465,
+      "GRÜNE": 38873,
+      "AfD": 9221,
+      "FDP": 15967
+    },
+    {
+      "Wahlkreis": 80,
+      "Wahlberechtigte": 222431,
+      "Abweichung": -0.09,
+      "CDU": 33522,
+      "DIE LINKE": 10754,
+      "SPD": 48353,
+      "GRÜNE": 46953,
+      "AfD": 7447,
+      "FDP": 14879
+    },
+    {
+      "Wahlkreis": 81,
+      "Wahlberechtigte": 229159,
+      "Abweichung": 0.21,
+      "CDU": 37064,
+      "DIE LINKE": 15145,
+      "SPD": 42309,
+      "GRÜNE": 29743,
+      "AfD": 11699,
+      "FDP": 11207
+    },
+    {
+      "Wahlkreis": 82,
+      "Abweichung": -10
+    },
+    {
+      "Wahlkreis": 83,
+      "Wahlberechtigte": 236172,
+      "Abweichung": 0.52,
+      "CDU": 13600,
+      "DIE LINKE": 33510,
+      "SPD": 32660,
+      "GRÜNE": 68175,
+      "AfD": 6746,
+      "FDP": 9061
+    },
+    {
+      "Wahlkreis": 84,
+      "Wahlberechtigte": 203409,
+      "Abweichung": -0.94,
+      "CDU": 28810,
+      "DIE LINKE": 36902,
+      "SPD": 29829,
+      "GRÜNE": 13599,
+      "AfD": 17969,
+      "FDP": 10918
+    },
+    {
+      "Wahlkreis": 85,
+      "Wahlberechtigte": 231947,
+      "Abweichung": 0.33,
+      "CDU": 43282,
+      "DIE LINKE": 39470,
+      "SPD": 23975,
+      "GRÜNE": 11209,
+      "AfD": 23575,
+      "FDP": 7845
+    },
+    {
+      "Wahlkreis": 86,
+      "Wahlberechtigte": 236662,
+      "Abweichung": 0.54,
+      "CDU": 20360,
+      "DIE LINKE": 47320,
+      "SPD": 31899,
+      "GRÜNE": 23944,
+      "AfD": 19545,
+      "FDP": 9847
+    }
+  ],
+  [
+    {
+      "title": "Variante 5"
+    },
+    {
+      "Wahlkreis": 76,
+      "Wahlberechtigte": 222736,
+      "Abweichung": -0.08,
+      "CDU": 20588,
+      "DIE LINKE": 28316,
+      "SPD": 35919,
+      "GRÜNE": 47884,
+      "AfD": 14118,
+      "FDP": 11867
+    },
+    {
+      "Wahlkreis": 77,
+      "Wahlberechtigte": 243003,
+      "Abweichung": 0.83,
+      "CDU": 45069,
+      "DIE LINKE": 7829,
+      "SPD": 49273,
+      "GRÜNE": 21510,
+      "AfD": 17279,
+      "FDP": 14965
+    },
+    {
+      "Wahlkreis": 78,
+      "Abweichung": -10
+    },
+    {
+      "Wahlkreis": 79,
+      "Wahlberechtigte": 220017,
+      "Abweichung": -0.2,
+      "CDU": 50282,
+      "DIE LINKE": 7289,
+      "SPD": 45109,
+      "GRÜNE": 38228,
+      "AfD": 9593,
+      "FDP": 16266
+    },
+    {
+      "Wahlkreis": 80,
+      "Wahlberechtigte": 218503,
+      "Abweichung": -0.26,
+      "CDU": 36449,
+      "DIE LINKE": 9892,
+      "SPD": 47058,
+      "GRÜNE": 36310,
+      "AfD": 8976,
+      "FDP": 15766
+    },
+    {
+      "Wahlkreis": 81,
+      "Wahlberechtigte": 228116,
+      "Abweichung": 0.16,
+      "CDU": 32765,
+      "DIE LINKE": 11578,
+      "SPD": 48458,
+      "GRÜNE": 48352,
+      "AfD": 8444,
+      "FDP": 12723
+    },
+    {
+      "Wahlkreis": 82,
+      "Wahlberechtigte": 228964,
+      "Abweichung": 0.2,
+      "CDU": 34709,
+      "DIE LINKE": 18585,
+      "SPD": 40931,
+      "GRÜNE": 30829,
+      "AfD": 11662,
+      "FDP": 10655
+    },
+    {
+      "Wahlkreis": 83,
+      "Wahlberechtigte": 203947,
+      "Abweichung": -0.91,
+      "CDU": 12024,
+      "DIE LINKE": 28023,
+      "SPD": 27646,
+      "GRÜNE": 59821,
+      "AfD": 6007,
+      "FDP": 8323
+    },
+    {
+      "Wahlkreis": 84,
+      "Wahlberechtigte": 206046,
+      "Abweichung": -0.82,
+      "CDU": 24947,
+      "DIE LINKE": 46232,
+      "SPD": 26692,
+      "GRÜNE": 15325,
+      "AfD": 17782,
+      "FDP": 9808
+    },
+    {
+      "Wahlkreis": 85,
+      "Wahlberechtigte": 231947,
+      "Abweichung": 0.33,
+      "CDU": 43282,
+      "DIE LINKE": 39470,
+      "SPD": 23975,
+      "GRÜNE": 11209,
+      "AfD": 23575,
+      "FDP": 7845
+    },
+    {
+      "Wahlkreis": 86,
+      "Wahlberechtigte": 229651,
+      "Abweichung": 0.23,
+      "CDU": 21158,
+      "DIE LINKE": 40146,
+      "SPD": 33225,
+      "GRÜNE": 22723,
+      "AfD": 20071,
+      "FDP": 10210
+    }
+  ],
+  [
+    {
+      "title": "Variante 6"
+    },
+    {
+      "Wahlkreis": 76,
+      "Wahlberechtigte": 217162,
+      "Abweichung": -0.32,
+      "CDU": 17479,
+      "DIE LINKE": 29459,
+      "SPD": 34089,
+      "GRÜNE": 51284,
+      "AfD": 11967,
+      "FDP": 10670
+    },
+    {
+      "Wahlkreis": 77,
+      "Wahlberechtigte": 244531,
+      "Abweichung": 0.89,
+      "CDU": 43314,
+      "DIE LINKE": 12641,
+      "SPD": 44664,
+      "GRÜNE": 24911,
+      "AfD": 18837,
+      "FDP": 15180
+    },
+    {
+      "Wahlkreis": 78,
+      "Wahlberechtigte": 220911,
+      "Abweichung": -0.16,
+      "CDU": 39988,
+      "DIE LINKE": 7708,
+      "SPD": 49042,
+      "GRÜNE": 21414,
+      "AfD": 13502,
+      "FDP": 14777
+    },
+    {
+      "Wahlkreis": 79,
+      "Wahlberechtigte": 217814,
+      "Abweichung": -0.3,
+      "CDU": 48959,
+      "DIE LINKE": 7455,
+      "SPD": 43465,
+      "GRÜNE": 38873,
+      "AfD": 9221,
+      "FDP": 15967
+    },
+    {
+      "Wahlkreis": 80,
+      "Wahlberechtigte": 228184,
+      "Abweichung": 0.17,
+      "CDU": 30921,
+      "DIE LINKE": 12046,
+      "SPD": 50462,
+      "GRÜNE": 54894,
+      "AfD": 6720,
+      "FDP": 14027
+    },
+    {
+      "Wahlkreis": 81,
+      "Wahlberechtigte": 230225,
+      "Abweichung": 0.26,
+      "CDU": 42259,
+      "DIE LINKE": 10879,
+      "SPD": 44391,
+      "GRÜNE": 24633,
+      "AfD": 13331,
+      "FDP": 12826
+    },
+    {
+      "Wahlkreis": 82,
+      "Abweichung": -10
+    },
+    {
+      "Wahlkreis": 83,
+      "Wahlberechtigte": 235064,
+      "Abweichung": 0.47,
+      "CDU": 12424,
+      "DIE LINKE": 34609,
+      "SPD": 32370,
+      "GRÜNE": 68566,
+      "AfD": 5768,
+      "FDP": 8189
+    },
+    {
+      "Wahlkreis": 84,
+      "Wahlberechtigte": 240005,
+      "Abweichung": 0.69,
+      "CDU": 28686,
+      "DIE LINKE": 56314,
+      "SPD": 30775,
+      "GRÜNE": 18218,
+      "AfD": 20447,
+      "FDP": 11473
+    },
+    {
+      "Wahlkreis": 85,
+      "Wahlberechtigte": 197988,
+      "Abweichung": -1.18,
+      "CDU": 39543,
+      "DIE LINKE": 29388,
+      "SPD": 19892,
+      "GRÜNE": 8316,
+      "AfD": 20910,
+      "FDP": 6180
+    },
+    {
+      "Wahlkreis": 86,
+      "Wahlberechtigte": 200673,
+      "Abweichung": -1.06,
+      "CDU": 17695,
+      "DIE LINKE": 36813,
+      "SPD": 28040,
+      "GRÜNE": 19485,
+      "AfD": 17356,
+      "FDP": 8682
+    }
+  ]
+]
