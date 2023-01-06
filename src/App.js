@@ -301,15 +301,13 @@ const partiesWithDirectSeats = Object.keys(originalSeats);
 function App() {
   const [activeVersion, setActiveVersion] = useState(titles[0]);
 
-  const getTableData = () =>
-    jsonData
-      .find((version) => version[0].title === activeVersion)
-      .slice(1)
-      .map((row, index) => ({ ...row, key: index }));
-
-  const tableData = jsonData.find(
+  const dataForThisVersion = jsonData.find(
     (version) => version[0].title === activeVersion
   );
+
+  const tableData = dataForThisVersion
+    .slice(1)
+    .map((row, index) => ({ ...row, key: index }));
 
   const projectedSeats = allTheSeats.find(
     (group) => group.version === activeVersion
@@ -319,7 +317,7 @@ function App() {
     .map((constituency) => {
       const currentConstituency = constituency[activeVersion];
       const electionDataToUse = omit(
-        tableData.find(
+        dataForThisVersion.find(
           (constituency) => constituency[CONSTITUENCY] === currentConstituency
         ),
         [ELIGIBLE_VOTERS, INEFFICIENT_MAJOR_PARTY_VOTES]
@@ -441,7 +439,7 @@ function App() {
             style={{ marginTop: "2rem", width: "100%" }}
             bordered
             pagination={false}
-            dataSource={getTableData()}
+            dataSource={tableData}
             columns={tableColumns.map((column) => ({
               title: column,
               dataIndex: column,
@@ -466,15 +464,13 @@ function App() {
                       column === CONSTITUENCY ? (
                         <div>({text})</div> // parenthesis for omitted constituency no
                       ) : (
-                        <div/> // no deviation or anything else
+                        <div /> // no deviation or anything else
                       )
                     ) : column === DEVIATION ? (
-                      <div>
-                        {(parseFloat(text) * 10).toFixed(1)}%
-                      </div>
+                      <div>{(parseFloat(text) * 10).toFixed(1)}%</div>
                     ) : (
                       <div>
-                        {text.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
+                        {text?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
                       </div>
                     ),
                 };
@@ -496,7 +492,7 @@ function App() {
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
                 directVotesRow[key] =
-                  index < 3
+                  index < 3 || index > 8
                     ? null
                     : pageData.filter(
                         (rowData) =>
