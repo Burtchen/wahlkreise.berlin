@@ -123,7 +123,7 @@ function MetaTable({ metaData, seats }) {
               .slice(0, 7)
               .map((sortedVersion, index) => ({
                 key: index,
-                versionAndConstituency: `${sortedVersion.constituency} - ${sortedVersion.version}`,
+                versionAndConstituency: `Wahlkreis ${sortedVersion.constituency} - ${sortedVersion.version}`,
                 deviation: `${(sortedVersion.deviation * 10).toFixed(1)}%`,
               }))}
             columns={[
@@ -187,7 +187,7 @@ function MetaTable({ metaData, seats }) {
               .slice(0, 7)
               .map((sortedVersion, index) => ({
                 key: index,
-                versionAndConstituency: `${sortedVersion.constituency} - ${sortedVersion.version}`,
+                versionAndConstituency: `Wahlkreis ${sortedVersion.constituency} - ${sortedVersion.version}`,
                 gapVotes: sortedVersion.gapVotes
                   .toString()
                   .replace(/\B(?=(\d{3})+(?!\d))/g, "."),
