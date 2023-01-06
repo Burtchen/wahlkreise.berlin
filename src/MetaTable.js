@@ -80,7 +80,7 @@ function MetaTable({ metaData, seats }) {
         </IntroParagraph>
       </FullWidthElement>
       <Row gutter={16}>
-        <Col span={6}>
+        <Col xs={24} md={12} xl={6}>
           <TableHeadline>Wahlkreisgröße im Schnitt</TableHeadline>
           <TableIntroParagraph>
             1 Person = 1 Stimme - dafür sollten Wahlkreise möglichst gleich groß
@@ -107,7 +107,7 @@ function MetaTable({ metaData, seats }) {
             ]}
           />
         </Col>
-        <Col span={6}>
+        <Col xs={24} md={12} xl={6}>
           <TableHeadline>Wahlkreisgrößen: Die Ausreißer</TableHeadline>
           <TableIntroParagraph>
             Welche Wahlkreise einzelner Varianten besonders stark vom Mittelwert
@@ -140,7 +140,7 @@ function MetaTable({ metaData, seats }) {
             ]}
           />
         </Col>
-        <Col span={6}>
+        <Col xs={24} md={12} xl={6}>
           <TableHeadline>Ineffiziente Stimmen</TableHeadline>
           <TableIntroParagraph>
             In einer Mehrheitswahl wie bei den Erststimmen zählt ausschließlich
@@ -174,7 +174,7 @@ function MetaTable({ metaData, seats }) {
             ]}
           />
         </Col>
-        <Col span={6}>
+        <Col xs={24} md={12} xl={6}>
           <TableHeadline>Abstände Platz 1 und 2</TableHeadline>
           <TableIntroParagraph>
             Ein großer Abstand auf Platz 2 deutet auf einen Wahlkreis hin, in
