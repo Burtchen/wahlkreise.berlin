@@ -230,8 +230,6 @@ const variantGroups = [
   },
 ];
 
-const tableColumns = Object.keys(jsonData[0][1]);
-
 const getTooltipText = (newSeats, originalSeats) => {
   const text = `${newSeats} direkt gewählt - `;
   if (newSeats === originalSeats) {
