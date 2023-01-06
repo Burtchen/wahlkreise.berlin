@@ -4,6 +4,7 @@ import { Table, Row, Col } from "antd";
 import { sortBy, times } from "lodash";
 import styled from "styled-components";
 import { ConstituencyCircle, FullWidthElement, partyColor } from "./App";
+import { Fragment } from "react";
 
 const TableHeadline = styled.h3`
   font-size: 1rem;
@@ -57,15 +58,15 @@ function MetaTable({ metaData, seats }) {
               title: "Angenommene Direktmandate",
               render(data) {
                 return {
-                  children: Object.keys(partyColor).map((party) => (
-                    <>
+                  children: Object.keys(partyColor).map((party, partyIndex) => (
+                    <Fragment key={partyIndex}>
                       {times(data[party], (index) => (
                         <ConstituencyCircle
                           key={index}
                           backgroundColor={partyColor[party]}
                         />
                       ))}
-                    </>
+                    </Fragment>
                   )),
                 };
               },

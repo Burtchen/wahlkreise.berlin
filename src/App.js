@@ -53,25 +53,26 @@ const jsonData = chunk(
   const metaLine = cloneDeep(group[1]);
   return group
     .slice(1, 14)
-    .map((constituency, index) => {
-      if (index === 0) {
-        return { title: group[0][DEFAULT_TITLE] };
-      }
-      return map(constituency, (value, key) => ({
-        [metaLine[key]]: value,
-      })).reduce((acc, currentPair) => {
-        const [key, value] = Object.entries(currentPair)[0];
-        return value === 0 || value === 1 || key === "Meiste Stimmen"
-          ? { ...acc }
-          : {
-              ...acc,
-              [key]:
-                key === CONSTITUENCY || key === DEVIATION
-                  ? value
-                  : Math.round(value * 1000),
-            };
-      }, {});
-    }, {})
+    .map(
+      (constituency, index) =>
+        index === 0
+          ? { title: group[0][DEFAULT_TITLE] }
+          : map(constituency, (value, key) => ({
+              [metaLine[key]]: value,
+            })).reduce((acc, currentPair) => {
+              const [key, value] = Object.entries(currentPair)[0];
+              return value === 0 || value === 1 || key === "Meiste Stimmen"
+                ? { ...acc }
+                : {
+                    ...acc,
+                    [key]:
+                      key === CONSTITUENCY || key === DEVIATION
+                        ? value
+                        : Math.round(value * 1000),
+                  };
+            }, {}),
+      {}
+    )
     .map((cleanedDistrict) => {
       const sortedVotes = Object.values(
         omit(cleanedDistrict, [ELIGIBLE_VOTERS, CONSTITUENCY, DEVIATION])
@@ -301,7 +302,10 @@ function App() {
   const [activeVersion, setActiveVersion] = useState(titles[0]);
 
   const getTableData = () =>
-    jsonData.find((version) => version[0].title === activeVersion).slice(1);
+    jsonData
+      .find((version) => version[0].title === activeVersion)
+      .slice(1)
+      .map((row, index) => ({ ...row, key: index }));
 
   const tableData = jsonData.find(
     (version) => version[0].title === activeVersion
@@ -364,7 +368,7 @@ function App() {
               }
             >
               {group.options.map((option) => (
-                <StyledRadioButton value={option.value}>
+                <StyledRadioButton key={option.value} value={option.value}>
                   {option.label}
                 </StyledRadioButton>
               ))}
@@ -403,7 +407,7 @@ function App() {
         <FullWidthElement>
           <h2>Direktmandate</h2>
           {partiesWithDirectSeats.map((party) => (
-            <PartyList>
+            <PartyList key={party}>
               <PartyName>{party}</PartyName>
               <div>
                 <Tooltip
@@ -462,10 +466,12 @@ function App() {
                       column === CONSTITUENCY ? (
                         <div>({text})</div> // parenthesis for omitted constituency no
                       ) : (
-                        <div /> // no deviation or anything else
+                        <div/> // no deviation or anything else
                       )
                     ) : column === DEVIATION ? (
-                      <div>{(parseFloat(text) * 10).toFixed(1)}%</div>
+                      <div>
+                        {(parseFloat(text) * 10).toFixed(1)}%
+                      </div>
                     ) : (
                       <div>
                         {text.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
@@ -508,15 +514,15 @@ function App() {
               return (
                 <>
                   <Table.Summary.Row>
-                    {map(mainSummaryRow, (summaryCell, index) => (
-                      <Table.Summary.Cell index={index}>
+                    {map(omit(mainSummaryRow, "key"), (summaryCell, index) => (
+                      <Table.Summary.Cell key={index} index={index}>
                         {summaryCell}
                       </Table.Summary.Cell>
                     ))}
                   </Table.Summary.Row>{" "}
                   <Table.Summary.Row>
-                    {map(directVotesRow, (summaryCell, index) => (
-                      <Table.Summary.Cell index={index}>
+                    {map(omit(directVotesRow, "key"), (summaryCell, index) => (
+                      <Table.Summary.Cell key={index} index={index}>
                         {summaryCell}
                       </Table.Summary.Cell>
                     ))}
