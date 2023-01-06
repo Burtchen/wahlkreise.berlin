@@ -1,7 +1,7 @@
 import "./App.css";
 
 import { read, utils } from "xlsx";
-import { Layout, Select, Radio, Table, Popover, Tooltip } from "antd";
+import { Layout, Select, Radio, Tabs, Tooltip } from "antd";
 import {
   chunk,
   cloneDeep,
@@ -18,11 +18,10 @@ import {
 import { useState } from "react";
 import styled from "styled-components";
 
-import version2Map from "./version-2-sqooshed.png";
-import { ReactComponent as BerlinMap } from "./berlin-state-level-districts.svg";
-
 import raw from "raw.macro";
 import MetaTable from "./MetaTable";
+import MapView from "./MapView";
+import ResultsTable from "./ResultsTable";
 
 // const jsonData = JSON.parse(raw("./bundestagswahlkreiskalkulator.json"));
 
@@ -30,10 +29,10 @@ const constituencyAssignments = JSON.parse(raw("./btw-kreise.json"));
 
 const DEFAULT_TITLE = "Wahlausgang 2021";
 
-const ELIGIBLE_VOTERS = "Wahlberechtigte";
-const CONSTITUENCY = "Wahlkreis";
-const DEVIATION = "Abweichung";
-const INEFFICIENT_MAJOR_PARTY_VOTES = "Ineffizient verteilte Stimmen";
+export const ELIGIBLE_VOTERS = "Wahlberechtigte";
+export const CONSTITUENCY = "Wahlkreis";
+export const DEVIATION = "Abweichung";
+export const INEFFICIENT_MAJOR_PARTY_VOTES = "Ineffizient verteilte Stimmen";
 const GAP_BETWEEN_FIRST_AND_SECOND = "Abstand Platz 1 zu 2";
 
 // todo: move to importable JSON
@@ -138,9 +137,6 @@ const metaData = jsonData.reduce(
   }
 );
 
-const isPartyColumn = (columnName) =>
-  [...partiesWithDirectSeats, "AfD", "FDP"].includes(columnName);
-
 const { Header, Content, Footer } = Layout;
 const { Group: RadioGroup, Button: RadioButton } = Radio;
 
@@ -162,16 +158,6 @@ const PartyList = styled.div`
 const PartyName = styled.span`
   font-size: 1.2rem;
   text-align: left;
-`;
-
-const SVGContainer = styled.div`
-  width: 100%;
-  svg {
-    width: 80%;
-    margin-left: auto;
-    margin-right: auto;
-    ${({ constituencyColors }) => constituencyColors};
-  }
 `;
 
 export const FullWidthElement = styled.div`
@@ -296,7 +282,7 @@ const allTheSeats = jsonData.map((version) => ({
 
 const originalSeats = allTheSeats[0].seats;
 
-const partiesWithDirectSeats = Object.keys(originalSeats);
+export const partiesWithDirectSeats = Object.keys(originalSeats);
 
 function App() {
   const [activeVersion, setActiveVersion] = useState(titles[0]);
@@ -304,10 +290,6 @@ function App() {
   const dataForThisVersion = jsonData.find(
     (version) => version[0].title === activeVersion
   );
-
-  const tableData = dataForThisVersion
-    .slice(1)
-    .map((row, index) => ({ ...row, key: index }));
 
   const projectedSeats = allTheSeats.find(
     (group) => group.version === activeVersion
@@ -379,29 +361,30 @@ function App() {
             options={variantGroups}
           />
         </FullWidthElement>
-        {activeVersion === "Variante 2 der Landeswahlleitung" ? (
-          <FullWidthElement>
-            <Popover
-              content={
-                <p style={{ maxWidth: "240px" }}>
-                  Für diese Variante hat die Landesregierung nicht, wie üblich,
-                  die geltenden Wahlkreise zur Abgeordnetenhauswahl zu neuen
-                  Bundestagswahlkreisen zusammengeführt, sondern teilweise
-                  komplett neue Wahlkreise konzipiert, für die wir (derzeit) nur
-                  Kartenmaterial in einer anderen Form haben.
-                </p>
-              }
-              title="Hinweis zu Variante 2 der Landesregierung"
-            >
-              <span>Warum sieht diese Karte anders aus?</span>
-            </Popover>
-            <img src={version2Map} alt="Logo" />
-          </FullWidthElement>
-        ) : (
-          <SVGContainer constituencyColors={constituencyColors}>
-            <BerlinMap className="berlin-map" />
-          </SVGContainer>
-        )}
+        <FullWidthElement>
+          <Tabs
+            defaultActiveKey="1"
+            items={[
+              {
+                label: `Karten`,
+                key: "1",
+                children: (
+                  <MapView
+                    activeVersion={activeVersion}
+                    constituencyColors={constituencyColors}
+                  />
+                ),
+              },
+              {
+                label: `Tabelle`,
+                key: "2",
+                children: (
+                  <ResultsTable dataForThisVersion={dataForThisVersion} />
+                ),
+              },
+            ]}
+          />
+        </FullWidthElement>
         <FullWidthElement>
           <h2>Direktmandate</h2>
           {partiesWithDirectSeats.map((party) => (
@@ -433,101 +416,7 @@ function App() {
             </PartyList>
           ))}
         </FullWidthElement>
-        <FullWidthElement>
-          <h2>Im Detail</h2>
-          <Table
-            style={{ marginTop: "2rem", width: "100%" }}
-            bordered
-            pagination={false}
-            dataSource={tableData}
-            columns={tableColumns.map((column) => ({
-              title: column,
-              dataIndex: column,
-              key: column,
-              render(text, row) {
-                return {
-                  props: {
-                    style: {
-                      background:
-                        parseInt(text) ===
-                        max(
-                          Object.entries(row)
-                            .filter((pair) => isPartyColumn(pair[0]))
-                            .map((pair) => pair[1])
-                        )
-                          ? "orange"
-                          : "transparent",
-                    },
-                  },
-                  children:
-                    Object.values(row).length < 3 ? ( // removed constituency case
-                      column === CONSTITUENCY ? (
-                        <div>({text})</div> // parenthesis for omitted constituency no
-                      ) : (
-                        <div /> // no deviation or anything else
-                      )
-                    ) : column === DEVIATION ? (
-                      <div>{(parseFloat(text) * 10).toFixed(1)}%</div>
-                    ) : (
-                      <div>
-                        {text?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
-                      </div>
-                    ),
-                };
-              },
-            }))}
-            summary={(pageData) => {
-              let mainSummaryRow = {};
-              let directVotesRow = {};
-              Object.keys(pageData[0]).forEach((key, index) => {
-                mainSummaryRow[key] =
-                  key === CONSTITUENCY
-                    ? "Gesamt/Mittelwert"
-                    : key === DEVIATION
-                    ? `${meanBy(
-                        pageData.filter((row) => row[DEVIATION] !== -10),
-                        (mV) => Math.abs(isNumber(mV[key]) ? mV[key] : 0)
-                      ).toFixed(1)}%`
-                    : sumBy(pageData, key)
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-                directVotesRow[key] =
-                  index < 3 || index > 8
-                    ? null
-                    : pageData.filter(
-                        (rowData) =>
-                          rowData[key] ===
-                          Math.max(
-                            ...Object.values(
-                              omit(rowData, [
-                                ELIGIBLE_VOTERS,
-                                INEFFICIENT_MAJOR_PARTY_VOTES,
-                              ])
-                            )
-                          )
-                      ).length;
-              });
-              return (
-                <>
-                  <Table.Summary.Row>
-                    {map(omit(mainSummaryRow, "key"), (summaryCell, index) => (
-                      <Table.Summary.Cell key={index} index={index}>
-                        {summaryCell}
-                      </Table.Summary.Cell>
-                    ))}
-                  </Table.Summary.Row>{" "}
-                  <Table.Summary.Row>
-                    {map(omit(directVotesRow, "key"), (summaryCell, index) => (
-                      <Table.Summary.Cell key={index} index={index}>
-                        {summaryCell}
-                      </Table.Summary.Cell>
-                    ))}
-                  </Table.Summary.Row>
-                </>
-              );
-            }}
-          />
-        </FullWidthElement>
+
         <MetaTable seats={allTheSeats} metaData={metaData} />
       </StyledContent>
       <Footer>

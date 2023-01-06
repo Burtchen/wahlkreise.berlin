@@ -10,7 +10,11 @@
   background: #f5f3f4;
 }
 
-.ant-radio-button-wrapper:hover,
+.ant-tabs-ink-bar {
+  background: #22223b !important;
+}
+
+.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn,
 .ant-radio-button-wrapper-checked,
 a {
   color: #22223b !important;
