@@ -174,6 +174,9 @@ const StyledContent = styled(Content)`
 
 const StyledRadioGroup = styled(RadioGroup)`
   margin-bottom: 1rem;
+  @media (max-width: 767px) {
+    display: none;
+  }
 `;
 
 const StyledRadioButton = styled(RadioButton)`
@@ -190,6 +193,7 @@ const StyledSelect = styled(Select)`
   @media (min-width: 768px) {
     display: none;
   }
+  min-width: 320px;
 `;
 
 export const ConstituencyCircle = styled.div`
@@ -293,24 +297,6 @@ function App() {
     (group) => group.version === activeVersion
   ).seats;
 
-  const constituencyColors = constituencyAssignments
-    .map((constituency) => {
-      const currentConstituency = constituency[activeVersion];
-      const electionDataToUse = omit(
-        dataForThisVersion.find(
-          (constituency) => constituency[CONSTITUENCY] === currentConstituency
-        ),
-        [ELIGIBLE_VOTERS, INEFFICIENT_MAJOR_PARTY_VOTES]
-      );
-      const numbersInThisElection = Object.values(electionDataToUse);
-      const mostVotesInDistrict = max(numbersInThisElection);
-      const partyWithMostVotes = Object.entries(electionDataToUse).find(
-        (pair) => pair[1] === mostVotesInDistrict
-      )[0];
-      return `#${constituency.districtName} { fill: ${partyColor[partyWithMostVotes]}};`;
-    })
-    .join(" ");
-
   return (
     <div className="App">
       <Header>
@@ -364,18 +350,32 @@ function App() {
             defaultActiveKey="1"
             items={[
               {
-                label: `Karten`,
+                label: `Wahlkreiszuschnitte`,
                 key: "1",
                 children: (
                   <MapView
                     activeVersion={activeVersion}
-                    constituencyColors={constituencyColors}
+                    constituencyAssignments={constituencyAssignments}
+                    dataForThisVersion={dataForThisVersion}
+                    showResults={false}
+                  />
+                ),
+              },
+              {
+                label: `Mögliche Erstimmenverteilung`,
+                key: "2",
+                children: (
+                  <MapView
+                    activeVersion={activeVersion}
+                    constituencyAssignments={constituencyAssignments}
+                    dataForThisVersion={dataForThisVersion}
+                    showResults={true}
                   />
                 ),
               },
               {
                 label: `Tabelle`,
-                key: "2",
+                key: "3",
                 children: (
                   <ResultsTable dataForThisVersion={dataForThisVersion} />
                 ),
