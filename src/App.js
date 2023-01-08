@@ -185,7 +185,7 @@ const StyledRadioButton = styled(RadioButton)`
   color: #333333;
   height: 80px !important;
   font-size: 0.8rem !important;
-  width: 140px;
+  width: 160px;
   line-height: 1.4 !important;
 `;
 
