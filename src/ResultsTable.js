@@ -17,7 +17,7 @@ const isPartyColumn = (columnName) =>
 function ResultsTable({ dataForThisVersion }) {
   return (
     <Table
-      style={{ marginTop: "2rem", width: "100%" }}
+      style={{ marginTop: "2rem", maxWidth: "100vw" }}
       bordered
       pagination={false}
       dataSource={dataForThisVersion
@@ -65,7 +65,7 @@ function ResultsTable({ dataForThisVersion }) {
         Object.keys(pageData[0]).forEach((key, index) => {
           mainSummaryRow[key] =
             key === CONSTITUENCY
-              ? "Gesamt/Mittelwert"
+              ? "Gesamt/ Mittelwert"
               : key === DEVIATION
               ? `${meanBy(
                   pageData.filter((row) => row[DEVIATION] !== -10),

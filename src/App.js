@@ -174,7 +174,7 @@ const StyledContent = styled(Content)`
 
 const StyledRadioGroup = styled(RadioGroup)`
   margin-bottom: 1rem;
-  @media (max-width: 767px) {
+  @media (max-width: 1023px) {
     display: none;
   }
 `;
@@ -185,12 +185,12 @@ const StyledRadioButton = styled(RadioButton)`
   color: #333333;
   height: 80px !important;
   font-size: 0.8rem !important;
-  width: 160px;
+  width: 144px;
   line-height: 1.4 !important;
 `;
 
 const StyledSelect = styled(Select)`
-  @media (min-width: 768px) {
+  @media (min-width: 1024px) {
     display: none;
   }
   min-width: 320px;
