@@ -1,5 +1,5 @@
 {
-  "name": "bundestagswahlkreiskalkulator",
+  "name": "wahlkreise.info",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

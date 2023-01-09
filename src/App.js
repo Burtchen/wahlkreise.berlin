@@ -1,7 +1,7 @@
 import "./App.css";
 
 import { read, utils } from "xlsx";
-import { Layout, Select, Radio, Tabs, Tooltip } from "antd";
+import { Layout, Select, Radio, Tabs, Button } from "antd";
 import {
   chunk,
   cloneDeep,
@@ -9,13 +9,11 @@ import {
   groupBy,
   isNumber,
   map,
-  max,
   maxBy,
   meanBy,
   omit,
   sum,
   sumBy,
-  times,
   uniq,
 } from "lodash";
 import { useState } from "react";
@@ -25,6 +23,7 @@ import raw from "raw.macro";
 import MetaTable from "./MetaTable";
 import MapView from "./MapView";
 import ResultsTable from "./ResultsTable";
+import SeatCircles from "./SeatCircles";
 
 // const jsonData = JSON.parse(raw("./bundestagswahlkreiskalkulator.json"));
 
@@ -106,7 +105,8 @@ const metaData = jsonData.reduce(
     if (version[0].title === "Variante 2 der Landeswahlleitung") {
       acc.splitDistricts = [
         ...acc.splitDistricts,
-        { // hard-coded sad emoji
+        {
+          // hard-coded sad emoji
           version: "Variante 2 der Landeswahlleitung",
           1: 8,
           2: 3,
@@ -176,26 +176,6 @@ const metaData = jsonData.reduce(
 
 const { Header, Content, Footer } = Layout;
 const { Group: RadioGroup, Button: RadioButton } = Radio;
-
-const PartyList = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  width: 350px;
-  margin-left: auto;
-  margin-right: auto;
-  > span {
-    width: 110px;
-  }
-  > div {
-    width: calc(100% - 110px);
-    text-align: left;
-  }
-`;
-
-const PartyName = styled.span`
-  font-size: 1.2rem;
-  text-align: left;
-`;
 
 export const FullWidthElement = styled.div`
   width: 100%;
@@ -273,19 +253,6 @@ const variantGroups = [
   },
 ];
 
-const getTooltipText = (newSeats, originalSeats) => {
-  const text = `${newSeats} direkt gewählt - `;
-  if (newSeats === originalSeats) {
-    return text + "Keine Veränderung gegenüber 2021.";
-  }
-  return (
-    text +
-    Math.abs(newSeats - originalSeats).toString() +
-    (newSeats > originalSeats ? " mehr " : " weniger ") +
-    "als 2021"
-  );
-};
-
 const getSeats = (tableData) =>
   tableData.slice(1).reduce((acc, row) => {
     const winningParty = maxBy(
@@ -327,6 +294,7 @@ export const partiesWithDirectSeats = Object.keys(originalSeats);
 
 function App() {
   const [activeVersion, setActiveVersion] = useState(titles[0]);
+  const [buildModeActive, setBuildModeActive] = useState(false);
 
   const dataForThisVersion = jsonData.find(
     (version) => version[0].title === activeVersion
@@ -356,104 +324,91 @@ function App() {
             bestehenden Zusammensetzung sowie vorgeschlagenen Alternativen vor.
           </p>
         </FullWidthElement>
-        <FullWidthElement
-          style={{ display: "flex", justifyContent: "space-evenly" }}
-        >
-          {variantGroups.map((group) => (
-            <StyledRadioGroup
-              size="large"
-              key={group.label}
-              onChange={(e) => setActiveVersion(e.target.value)}
-              value={
-                group.options.find((option) => option.value === activeVersion)
-                  ? activeVersion
-                  : undefined
-              }
+        <FullWidthElement>
+          <Button
+            style={{ display: "none" }}
+            onClick={() => setBuildModeActive(true)}
+          >
+            Eigene Variante bauen
+          </Button>
+        </FullWidthElement>
+        {!buildModeActive && (
+          <>
+            <FullWidthElement
+              style={{ display: "flex", justifyContent: "space-evenly" }}
             >
-              {group.options.map((option) => (
-                <StyledRadioButton key={option.value} value={option.value}>
-                  {option.label}
-                </StyledRadioButton>
-              ))}
-            </StyledRadioGroup>
-          ))}
-          <StyledSelect
-            value={activeVersion}
-            id="select-active-version"
-            onChange={(newValue) => setActiveVersion(newValue)}
-            options={variantGroups}
-          />
-        </FullWidthElement>
-        <FullWidthElement>
-          <Tabs
-            defaultActiveKey="1"
-            items={[
-              {
-                label: `Wahlkreiszuschnitte`,
-                key: "1",
-                children: (
-                  <MapView
-                    activeVersion={activeVersion}
-                    constituencyAssignments={constituencyAssignments}
-                    dataForThisVersion={dataForThisVersion}
-                    showResults={false}
-                  />
-                ),
-              },
-              {
-                label: `Erststimmenverteilung`,
-                key: "2",
-                children: (
-                  <MapView
-                    activeVersion={activeVersion}
-                    constituencyAssignments={constituencyAssignments}
-                    dataForThisVersion={dataForThisVersion}
-                    showResults={true}
-                  />
-                ),
-              },
-              {
-                label: `Tabelle`,
-                key: "3",
-                children: (
-                  <ResultsTable dataForThisVersion={dataForThisVersion} />
-                ),
-              },
-            ]}
-          />
-        </FullWidthElement>
-        <FullWidthElement>
-          <h2>Direktmandate</h2>
-          {partiesWithDirectSeats.map((party) => (
-            <PartyList key={party}>
-              <PartyName>{party}</PartyName>
-              <div>
-                <Tooltip
-                  title={getTooltipText(
-                    projectedSeats[party],
-                    originalSeats[party]
-                  )}
-                >
-                  {times(
-                    max([projectedSeats[party], originalSeats[party]]),
-                    (index) => (
-                      <ConstituencyCircle
-                        key={index}
-                        backgroundColor={partyColor[party]}
-                        isNewSeat={index >= originalSeats[party]}
-                        isLostSeat={
-                          index < originalSeats[party] &&
-                          index >= projectedSeats[party]
-                        }
-                      />
+              {variantGroups.map((group) => (
+                <StyledRadioGroup
+                  size="large"
+                  key={group.label}
+                  onChange={(e) => setActiveVersion(e.target.value)}
+                  value={
+                    group.options.find(
+                      (option) => option.value === activeVersion
                     )
-                  )}
-                </Tooltip>
-              </div>
-            </PartyList>
-          ))}
-        </FullWidthElement>
+                      ? activeVersion
+                      : undefined
+                  }
+                >
+                  {group.options.map((option) => (
+                    <StyledRadioButton key={option.value} value={option.value}>
+                      {option.label}
+                    </StyledRadioButton>
+                  ))}
+                </StyledRadioGroup>
+              ))}
+              <StyledSelect
+                value={activeVersion}
+                id="select-active-version"
+                onChange={(newValue) => setActiveVersion(newValue)}
+                options={variantGroups}
+              />
+            </FullWidthElement>
 
+            <FullWidthElement>
+              <Tabs
+                defaultActiveKey="1"
+                items={[
+                  {
+                    label: `Wahlkreiszuschnitte`,
+                    key: "1",
+                    children: (
+                      <MapView
+                        activeVersion={activeVersion}
+                        constituencyAssignments={constituencyAssignments}
+                        dataForThisVersion={dataForThisVersion}
+                        showResults={false}
+                      />
+                    ),
+                  },
+                  {
+                    label: `Erststimmenverteilung`,
+                    key: "2",
+                    children: (
+                      <MapView
+                        activeVersion={activeVersion}
+                        constituencyAssignments={constituencyAssignments}
+                        dataForThisVersion={dataForThisVersion}
+                        showResults={true}
+                      />
+                    ),
+                  },
+                  {
+                    label: `Tabelle`,
+                    key: "3",
+                    children: (
+                      <ResultsTable dataForThisVersion={dataForThisVersion} />
+                    ),
+                  },
+                ]}
+              />
+            </FullWidthElement>
+          </>
+        )}
+        <SeatCircles
+          projectedSeats={projectedSeats}
+          originalSeats={originalSeats}
+        />
         <MetaTable seats={allTheSeats} metaData={metaData} />
       </StyledContent>
       <Footer>
