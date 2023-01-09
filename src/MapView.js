@@ -60,31 +60,45 @@ const MapView = ({
     }
   );
 
-  return activeVersion === "Variante 2 der Landeswahlleitung" ? (
-    <FullWidthElement>
-      <Popover
-        content={
-          <p style={{ maxWidth: "240px" }}>
-            Für diese Variante hat die Landesregierung nicht, wie üblich, die
-            geltenden Wahlkreise zur Abgeordnetenhauswahl zu neuen
-            Bundestagswahlkreisen zusammengeführt, sondern teilweise komplett
-            neue Wahlkreise konzipiert, für die wir (derzeit) nur Kartenmaterial
-            in einer anderen Form haben.
-          </p>
-        }
-        title="Hinweis zu Variante 2 der Landeswahlleitung"
-      >
-        <span>Warum sieht diese Karte anders aus?</span>
-      </Popover>
-      <img src={version2Map} alt="Karte von Version 2 der Landeswahlleitung" />
-    </FullWidthElement>
-  ) : (
-    <SVGContainer>
-      <BerlinMap
-        constituencyAssignments={federalConstituenciesWithElectionResults}
-        showResults={showResults}
-      />
-    </SVGContainer>
+  return (
+    <>
+      {showResults && (
+        <p>
+          Diese Karte zeigt, wie die Stimmverteilung in dieser Variante aussähe
+          und welche Partei wo Direktmandate erzielen würde, wenn genauso wie
+          2021 gewählt würde.
+        </p>
+      )}
+      {activeVersion === "Variante 2 der Landeswahlleitung" ? (
+        <FullWidthElement>
+          <Popover
+            content={
+              <p style={{ maxWidth: "240px" }}>
+                Für diese Variante hat die Landesregierung nicht, wie üblich,
+                die geltenden Wahlkreise zur Abgeordnetenhauswahl zu neuen
+                Bundestagswahlkreisen zusammengeführt, sondern teilweise
+                komplett neue Wahlkreise konzipiert, für die wir (derzeit) nur
+                Kartenmaterial in einer anderen Form haben.
+              </p>
+            }
+            title="Hinweis zu Variante 2 der Landeswahlleitung"
+          >
+            <span>Warum sieht diese Karte anders aus?</span>
+          </Popover>
+          <img
+            src={version2Map}
+            alt="Karte von Version 2 der Landeswahlleitung"
+          />
+        </FullWidthElement>
+      ) : (
+        <SVGContainer>
+          <BerlinMap
+            constituencyAssignments={federalConstituenciesWithElectionResults}
+            showResults={showResults}
+          />
+        </SVGContainer>
+      )}
+    </>
   );
 };
 

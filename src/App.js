@@ -184,8 +184,10 @@ const StyledRadioButton = styled(RadioButton)`
   align-items: center;
   color: #333333;
   height: 80px !important;
+  padding-left: 12px;
+  padding-right: 12px;
   font-size: 0.8rem !important;
-  width: 144px;
+  width: 140px;
   line-height: 1.4 !important;
 `;
 
@@ -362,7 +364,7 @@ function App() {
                 ),
               },
               {
-                label: `Mögliche Erstimmenverteilung`,
+                label: `Erststimmenverteilung`,
                 key: "2",
                 children: (
                   <MapView
