@@ -80,67 +80,7 @@ function MetaTable({ metaData, seats }) {
         </IntroParagraph>
       </FullWidthElement>
       <Row gutter={16}>
-        <Col xs={24} md={12} xl={6}>
-          <TableHeadline>Wahlkreisgröße im Schnitt</TableHeadline>
-          <TableIntroParagraph>
-            1 Person = 1 Stimme - dafür sollten Wahlkreise möglichst gleich groß
-            sein. Die durchschnittliche Abweichung der Versionen.
-          </TableIntroParagraph>
-          <StyledTable
-            pagination={false}
-            dataSource={sortBy(metaData.meanDeviations, "meanDeviation")
-              .reverse()
-              .map((sortedVersion, index) => ({
-                key: index,
-                version: sortedVersion.version,
-                meanDeviation: `${(sortedVersion.meanDeviation * 10).toFixed(
-                  1
-                )}%`,
-              }))}
-            columns={[
-              { key: "version", dataIndex: "version", title: "Variante" },
-              {
-                key: "meanDeviation",
-                dataIndex: "meanDeviation",
-                title: "Durchschnitt Abweichung",
-              },
-            ]}
-          />
-        </Col>
-        <Col xs={24} md={12} xl={6}>
-          <TableHeadline>Wahlkreisgrößen: Die Ausreißer</TableHeadline>
-          <TableIntroParagraph>
-            Welche Wahlkreise einzelner Varianten besonders stark vom Mittelwert
-            abweichen.
-          </TableIntroParagraph>
-          <StyledTable
-            pagination={false}
-            dataSource={sortBy(
-              metaData.deviationConstituencies,
-              (constituency) => Math.abs(constituency.deviation)
-            )
-              .reverse()
-              .slice(0, 7)
-              .map((sortedVersion, index) => ({
-                key: index,
-                versionAndConstituency: `Wahlkreis ${sortedVersion.constituency} - ${sortedVersion.version}`,
-                deviation: `${(sortedVersion.deviation * 10).toFixed(1)}%`,
-              }))}
-            columns={[
-              {
-                key: "versionAndConstituency",
-                dataIndex: "versionAndConstituency",
-                title: "Variante und Wahlkreis",
-              },
-              {
-                key: "deviation",
-                dataIndex: "deviation",
-                title: "Abweichung",
-              },
-            ]}
-          />
-        </Col>
-        <Col xs={24} md={12} xl={6}>
+        <Col xs={24} md={12} xl={8}>
           <TableHeadline>Ineffiziente Stimmen</TableHeadline>
           <TableIntroParagraph>
             In einer Mehrheitswahl wie bei den Erststimmen zählt ausschließlich
@@ -174,7 +114,7 @@ function MetaTable({ metaData, seats }) {
             ]}
           />
         </Col>
-        <Col xs={24} md={12} xl={6}>
+        <Col xs={24} md={12} xl={8}>
           <TableHeadline>Abstände Platz 1 und 2</TableHeadline>
           <TableIntroParagraph>
             Ein großer Abstand auf Platz 2 deutet auf einen Wahlkreis hin, in
@@ -202,6 +142,98 @@ function MetaTable({ metaData, seats }) {
                 key: "gapVotes",
                 dataIndex: "gapVotes",
                 title: "Abstand 1 - 2",
+              },
+            ]}
+          />
+        </Col>
+        <Col xs={24} md={12} xl={8}>
+          <TableHeadline>Aufgeteilte Bezirke</TableHeadline>
+          <TableIntroParagraph>
+            Je mehr Wahlkreise ein Bezirk umfasst, desto herausfordernder wird
+            die Administration und eine organische Repräsentation "vor Ort".
+          </TableIntroParagraph>
+          <StyledTable
+            pagination={false}
+            dataSource={sortBy(metaData.splitDistricts, 1).map(
+              (sortedVersion, index) => ({
+                key: index,
+                version: sortedVersion.version,
+                splitDistricts:
+                  (sortedVersion[2] || 0) +
+                  (sortedVersion[3] || 0) +
+                  (sortedVersion[4] || 0),
+              })
+            )}
+            columns={[
+              {
+                key: "version",
+                dataIndex: "version",
+                title: "Variante",
+              },
+              {
+                key: "splitDistricts",
+                dataIndex: "splitDistricts",
+                title: "Aufgeteilte Bezirke",
+              },
+            ]}
+          />
+        </Col>
+        <Col xs={24} md={12} xl={8}>
+          <TableHeadline>Wahlkreisgröße im Schnitt</TableHeadline>
+          <TableIntroParagraph>
+            1 Person = 1 Stimme - dafür sollten Wahlkreise möglichst gleich groß
+            sein. Die durchschnittliche Abweichung der Versionen.
+          </TableIntroParagraph>
+          <StyledTable
+            pagination={false}
+            dataSource={sortBy(metaData.meanDeviations, "meanDeviation")
+              .reverse()
+              .map((sortedVersion, index) => ({
+                key: index,
+                version: sortedVersion.version,
+                meanDeviation: `${(sortedVersion.meanDeviation * 10).toFixed(
+                  1
+                )}%`,
+              }))}
+            columns={[
+              { key: "version", dataIndex: "version", title: "Variante" },
+              {
+                key: "meanDeviation",
+                dataIndex: "meanDeviation",
+                title: "Durchschnitt Abweichung",
+              },
+            ]}
+          />
+        </Col>
+        <Col xs={24} md={12} xl={8}>
+          <TableHeadline>Wahlkreisgrößen: Die Ausreißer</TableHeadline>
+          <TableIntroParagraph>
+            Welche Wahlkreise einzelner Varianten besonders stark vom Mittelwert
+            abweichen.
+          </TableIntroParagraph>
+          <StyledTable
+            pagination={false}
+            dataSource={sortBy(
+              metaData.deviationConstituencies,
+              (constituency) => Math.abs(constituency.deviation)
+            )
+              .reverse()
+              .slice(0, 7)
+              .map((sortedVersion, index) => ({
+                key: index,
+                versionAndConstituency: `Wahlkreis ${sortedVersion.constituency} - ${sortedVersion.version}`,
+                deviation: `${(sortedVersion.deviation * 10).toFixed(1)}%`,
+              }))}
+            columns={[
+              {
+                key: "versionAndConstituency",
+                dataIndex: "versionAndConstituency",
+                title: "Variante und Wahlkreis",
+              },
+              {
+                key: "deviation",
+                dataIndex: "deviation",
+                title: "Abweichung",
               },
             ]}
           />

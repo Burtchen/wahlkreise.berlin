@@ -5,6 +5,8 @@ import { Layout, Select, Radio, Tabs, Tooltip } from "antd";
 import {
   chunk,
   cloneDeep,
+  countBy,
+  groupBy,
   isNumber,
   map,
   max,
@@ -14,6 +16,7 @@ import {
   sum,
   sumBy,
   times,
+  uniq,
 } from "lodash";
 import { useState } from "react";
 import styled from "styled-components";
@@ -89,11 +92,44 @@ const jsonData = chunk(
     });
 });
 
+const constituenciesByDistrict = groupBy(
+  constituencyAssignments,
+  (constituency) => constituency.districtName.split("-0")[0]
+);
+
 const metaData = jsonData.reduce(
   (acc, version) => {
     const justTheConstituencies = version.filter(
       (row) => row[DEVIATION] && row[DEVIATION] !== -10
     );
+
+    if (version[0].title === "Variante 2 der Landeswahlleitung") {
+      acc.splitDistricts = [
+        ...acc.splitDistricts,
+        { // hard-coded sad emoji
+          version: "Variante 2 der Landeswahlleitung",
+          1: 8,
+          2: 3,
+          3: 1,
+        },
+      ];
+    } else {
+      const districtSplits = Object.entries(constituenciesByDistrict).map(
+        ([districtName, stateConstituencies]) => ({
+          districtName,
+          splits: uniq(map(stateConstituencies, version[0].title)).length,
+        })
+      );
+
+      acc.splitDistricts = [
+        ...acc.splitDistricts,
+        {
+          version: version[0].title,
+          ...countBy(districtSplits, (district) => district.splits),
+        },
+      ];
+    }
+
     acc.deviationConstituencies = [
       ...acc.deviationConstituencies,
       ...justTheConstituencies.map((row) => ({
@@ -130,6 +166,7 @@ const metaData = jsonData.reduce(
     return acc;
   },
   {
+    splitDistricts: [],
     meanDeviations: [],
     deviationConstituencies: [],
     inefficientVotesSums: [],
