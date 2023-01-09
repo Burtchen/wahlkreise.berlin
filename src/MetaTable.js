@@ -20,7 +20,8 @@ const TableIntroParagraph = styled.p`
 `;
 
 const StyledTable = styled(Table)`
-  margin-top: 1rem;
+  margin-top: 0;
+  margin-bottom: 2rem;
   background: transparent;
   tr,
   td,

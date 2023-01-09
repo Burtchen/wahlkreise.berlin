@@ -21,6 +21,9 @@ const SVGContainer = styled.div`
     width: 80%;
     margin-left: auto;
     margin-right: auto;
+    g:hover {
+      filter: brightness(70%);
+    }
   }
 `;
 
