@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
-import version2Map from "./version-2-sqooshed.png";
+import version2ConstituenciesMap from "./v2-constituencies.png";
+import version2ResultsMap from "./v2-results.png";
+import { InfoCircleOutlined } from "@ant-design/icons";
 
 import {
   CONSTITUENCY,
@@ -70,7 +72,7 @@ const MapView = ({
         </p>
       )}
       {activeVersion === "Variante 2 der Landeswahlleitung" ? (
-        <FullWidthElement>
+        <FullWidthElement style={{ position: "relative" }}>
           <Popover
             content={
               <p style={{ maxWidth: "240px" }}>
@@ -83,10 +85,12 @@ const MapView = ({
             }
             title="Hinweis zu Variante 2 der Landeswahlleitung"
           >
-            <span>Warum sieht diese Karte anders aus?</span>
+            <p style={{ position: "absolute", right: "100px" }}>
+              <InfoCircleOutlined /> Warum sieht diese Karte anders aus?
+            </p>
           </Popover>
           <img
-            src={version2Map}
+            src={showResults ? version2ResultsMap : version2ConstituenciesMap}
             alt="Karte von Version 2 der Landeswahlleitung"
           />
         </FullWidthElement>
