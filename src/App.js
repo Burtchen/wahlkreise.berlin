@@ -1,22 +1,26 @@
 import "./App.css";
 
 import { read, utils } from "xlsx";
-import { Layout, Select, Radio, Tabs, Button } from "antd";
+import { Layout, Select, Radio, Tabs, Button, Row, Col } from "antd";
 import {
   chunk,
   cloneDeep,
   countBy,
+  flatten,
   groupBy,
   isNumber,
+  isUndefined,
   map,
   maxBy,
   meanBy,
   omit,
+  reduce,
   sum,
   sumBy,
+  times,
   uniq,
 } from "lodash";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import raw from "raw.macro";
@@ -74,16 +78,16 @@ const jsonData = chunk(
             }, {}),
       {}
     )
-    .map((cleanedDistrict) => {
+    .map((cleanedConstituency) => {
       const sortedVotes = Object.values(
-        omit(cleanedDistrict, [ELIGIBLE_VOTERS, CONSTITUENCY, DEVIATION])
+        omit(cleanedConstituency, [ELIGIBLE_VOTERS, CONSTITUENCY, DEVIATION])
       );
       if (!sortedVotes.length || !isNumber(sortedVotes[0])) {
-        return cleanedDistrict;
+        return cleanedConstituency;
       }
       sortedVotes.sort((a, b) => b - a);
       return {
-        ...cleanedDistrict,
+        ...cleanedConstituency,
         [GAP_BETWEEN_FIRST_AND_SECOND]: sortedVotes[0] - sortedVotes[1],
         [INEFFICIENT_MAJOR_PARTY_VOTES]:
           sum(sortedVotes) - sortedVotes[0] - (sortedVotes[0] - sortedVotes[1]),
@@ -215,6 +219,17 @@ const StyledSelect = styled(Select)`
   min-width: 320px;
 `;
 
+const ConstituencySelect = styled(Select)`
+  width: 80px;
+  .ant-select-selector {
+    padding: 0 5px !important;
+    inset-inline-start: 0 !important;
+  }
+  .ant-select-dropdown .ant-select-item {
+    padding: 5px;
+  }
+`;
+
 export const ConstituencyCircle = styled.div`
   border-radius: 50%;
   display: inline-block;
@@ -292,17 +307,56 @@ const originalSeats = allTheSeats[0].seats;
 
 export const partiesWithDirectSeats = Object.keys(originalSeats);
 
+const orderedConstituencyList = flatten(
+  Object.values(constituenciesByDistrict)
+);
+
+const districtDataForState = orderedConstituencyList.map((constituency) => ({
+  name: constituency.districtName,
+  constituency: constituency["Variante 1 der Landeswahlleitung"],
+}));
+
+const getCodeFromCustomSelection = (customData) =>
+  customData
+    .map((setConstituency) => (setConstituency.constituency - 73).toString(16)) // 0 = not set
+    .join("");
+
+const convertCodeToElectionData = (code) => {
+  const mappedConstituencies = groupBy(
+    code.split("").map((letter, index) => ({
+      districtName: orderedConstituencyList[index].districtName,
+      constituencyNumber: parseInt(letter, 16) + 73,
+    })),
+    "constituencyNumber"
+  );
+  console.log(mappedConstituencies);
+  return code;
+};
+
 function App() {
   const [activeVersion, setActiveVersion] = useState(titles[0]);
   const [buildModeActive, setBuildModeActive] = useState(false);
+  const [customSelection, setCustomSelection] = useState([
+    ...orderedConstituencyList.map((constituency) => ({
+      constituency: 73, // = 0
+      name: constituency.districtName,
+    })),
+  ]);
 
-  const dataForThisVersion = jsonData.find(
-    (version) => version[0].title === activeVersion
-  );
+  useEffect(() => {
+    if (buildModeActive && customSelection.length > 0) {
+      setActiveVersion(getCodeFromCustomSelection(customSelection));
+    }
+  }, [customSelection, buildModeActive]);
+
+  const dataForThisVersion = activeVersion.match(/^[A-Fa-f0-9]+$/)
+    ? convertCodeToElectionData(activeVersion)
+    : jsonData.find((version) => version[0].title === activeVersion);
+  console.log({ dataForThisVersion });
 
   const projectedSeats = allTheSeats.find(
     (group) => group.version === activeVersion
-  ).seats;
+  )?.seats;
 
   return (
     <div className="App">
@@ -327,11 +381,73 @@ function App() {
         <FullWidthElement>
           <Button
             style={{ display: "none" }}
-            onClick={() => setBuildModeActive(true)}
+            onClick={() => {
+              setBuildModeActive(true);
+            }}
           >
             Eigene Variante bauen
           </Button>
         </FullWidthElement>
+        {buildModeActive && (
+          <div>
+            <Button onClick={() => setCustomSelection(districtDataForState)}>
+              Mit Variante 1 vorbelegen
+            </Button>
+            <Row>
+              {Object.entries(constituenciesByDistrict).map(
+                ([district, constituencies]) => (
+                  <Col span={4} key={district}>
+                    <h3>{district}</h3>
+                    <ul style={{ listStyleType: "none" }}>
+                      {constituencies.map((constituency) => {
+                        const matchingCustomConstituency = customSelection.find(
+                          (setConstituency) =>
+                            setConstituency.name === constituency.districtName
+                        );
+                        let value;
+                        if (
+                          matchingCustomConstituency &&
+                          matchingCustomConstituency.constituency !== 73
+                        ) {
+                          value = matchingCustomConstituency.constituency;
+                        } else {
+                          value = undefined;
+                        }
+                        return (
+                          <li key={constituency.districtName}>
+                            {constituency.districtName.split("-0")[1]}
+                            <ConstituencySelect
+                              value={value}
+                              onChange={(newConstituency) => {
+                                const existingIndex = customSelection.findIndex(
+                                  (setConstituency) =>
+                                    setConstituency.name ===
+                                    constituency.districtName
+                                );
+
+                                const clonedSelection =
+                                  cloneDeep(customSelection);
+                                clonedSelection[existingIndex] = {
+                                  name: constituency.districtName,
+                                  constituency: newConstituency,
+                                };
+                                setCustomSelection([...clonedSelection]);
+                              }}
+                              options={times(12, (index) => ({
+                                label: `WK ${index + 74}`,
+                                value: index + 74,
+                              }))}
+                            />{" "}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </Col>
+                )
+              )}
+            </Row>
+          </div>
+        )}
         {!buildModeActive && (
           <>
             <FullWidthElement
@@ -405,10 +521,12 @@ function App() {
             </FullWidthElement>
           </>
         )}
-        <SeatCircles
-          projectedSeats={projectedSeats}
-          originalSeats={originalSeats}
-        />
+        {projectedSeats && (
+          <SeatCircles
+            projectedSeats={projectedSeats}
+            originalSeats={originalSeats}
+          />
+        )}
         <MetaTable seats={allTheSeats} metaData={metaData} />
       </StyledContent>
       <Footer>
