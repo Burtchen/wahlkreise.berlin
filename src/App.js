@@ -1,21 +1,15 @@
 import "./App.css";
 
-import { read, utils } from "xlsx";
 import { Layout, Select, Radio, Tabs, Button, Row, Col } from "antd";
 import {
-  chunk,
   cloneDeep,
   countBy,
   flatten,
   groupBy,
-  isNumber,
-  isUndefined,
   map,
   maxBy,
   meanBy,
   omit,
-  reduce,
-  sum,
   sumBy,
   times,
   uniq,
@@ -29,71 +23,15 @@ import MapView from "./MapView";
 import ResultsTable from "./ResultsTable";
 import SeatCircles from "./SeatCircles";
 
-// const jsonData = JSON.parse(raw("./bundestagswahlkreiskalkulator.json"));
+const jsonData = JSON.parse(raw("./data/btw-varianten.json"));
 
-const constituencyAssignments = JSON.parse(raw("./btw-kreise.json"));
-
-const DEFAULT_TITLE = "Wahlausgang 2021";
+const constituencyAssignments = JSON.parse(raw("./data/btw-kreise.json"));
 
 export const ELIGIBLE_VOTERS = "Wahlberechtigte";
 export const CONSTITUENCY = "Wahlkreis";
 export const DEVIATION = "Abweichung";
 export const INEFFICIENT_MAJOR_PARTY_VOTES = "Ineffizient verteilte Stimmen";
 const GAP_BETWEEN_FIRST_AND_SECOND = "Abstand Platz 1 zu 2";
-
-// todo: move to importable JSON
-const jsonData = chunk(
-  [
-    {
-      [DEFAULT_TITLE]: DEFAULT_TITLE,
-      Erststimmen: "Erststimmen",
-      "Gewonnene Direktmandate": "Gewonnene Direktmandate",
-    },
-    ...utils.sheet_to_json(
-      read(raw("./btw-analyse.csv"), { type: "string" }).Sheets.Sheet1
-    ),
-  ],
-  16
-).map((group) => {
-  const metaLine = cloneDeep(group[1]);
-  return group
-    .slice(1, 14)
-    .map(
-      (constituency, index) =>
-        index === 0
-          ? { title: group[0][DEFAULT_TITLE] }
-          : map(constituency, (value, key) => ({
-              [metaLine[key]]: value,
-            })).reduce((acc, currentPair) => {
-              const [key, value] = Object.entries(currentPair)[0];
-              return value === 0 || value === 1 || key === "Meiste Stimmen"
-                ? { ...acc }
-                : {
-                    ...acc,
-                    [key]:
-                      key === CONSTITUENCY || key === DEVIATION
-                        ? value
-                        : Math.round(value * 1000),
-                  };
-            }, {}),
-      {}
-    )
-    .map((cleanedConstituency) => {
-      const sortedVotes = Object.values(
-        omit(cleanedConstituency, [ELIGIBLE_VOTERS, CONSTITUENCY, DEVIATION])
-      );
-      if (!sortedVotes.length || !isNumber(sortedVotes[0])) {
-        return cleanedConstituency;
-      }
-      sortedVotes.sort((a, b) => b - a);
-      return {
-        ...cleanedConstituency,
-        [GAP_BETWEEN_FIRST_AND_SECOND]: sortedVotes[0] - sortedVotes[1],
-        [INEFFICIENT_MAJOR_PARTY_VOTES]:
-          sum(sortedVotes) - sortedVotes[0] - (sortedVotes[0] - sortedVotes[1]),
-      };
-    });
-});
 
 const constituenciesByDistrict = groupBy(
   constituencyAssignments,
