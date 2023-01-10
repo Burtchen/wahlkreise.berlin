@@ -352,7 +352,6 @@ function App() {
   const dataForThisVersion = activeVersion.match(/^[A-Fa-f0-9]+$/)
     ? convertCodeToElectionData(activeVersion)
     : jsonData.find((version) => version[0].title === activeVersion);
-  console.log({ dataForThisVersion });
 
   const projectedSeats = allTheSeats.find(
     (group) => group.version === activeVersion
