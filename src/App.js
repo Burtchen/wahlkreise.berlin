@@ -22,6 +22,7 @@ import MetaTable from "./MetaTable";
 import MapView from "./MapView";
 import ResultsTable from "./ResultsTable";
 import SeatCircles from "./SeatCircles";
+import Footer from "./components/Footer";
 
 const jsonData = JSON.parse(raw("./data/btw-varianten.json"));
 
@@ -116,19 +117,20 @@ const metaData = jsonData.reduce(
   }
 );
 
-const { Header, Content, Footer } = Layout;
+const { Header, Content } = Layout;
 const { Group: RadioGroup, Button: RadioButton } = Radio;
 
 export const FullWidthElement = styled.div`
   width: 100%;
 `;
 
-const StyledContent = styled(Content)`
+export const StyledContent = styled(Content)`
   display: flex;
   max-width: 1200px;
   flex-wrap: wrap;
   margin-left: auto;
   margin-right: auto;
+  text-align: left;
 `;
 
 const StyledRadioGroup = styled(RadioGroup)`
@@ -466,12 +468,7 @@ function App() {
         )}
         <MetaTable seats={allTheSeats} metaData={metaData} />
       </StyledContent>
-      <Footer>
-        <p>
-          Rohdaten und Varianten-Vorschläge: Dr. Nicolas Scharioth.
-          Programmierung: Christian Burtchen.
-        </p>
-      </Footer>
+      <Footer />
     </div>
   );
 }
