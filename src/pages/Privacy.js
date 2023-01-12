@@ -1,15 +1,12 @@
 import "../App.css";
 
 import { FullWidthElement, StyledContent } from "../App";
-import { Layout } from "antd";
 import Footer from "../components/Footer";
-const { Header } = Layout;
+import Header from "../components/Header";
 
 const Privacy = () => (
   <div className="App">
-    <Header>
-      <h1 style={{ color: "#22223B" }}>Der Atlas der Berliner Wahlkreise</h1>
-    </Header>
+    <Header />
     <StyledContent>
       <FullWidthElement>
         <h2>Datenschutzerklärung</h2>

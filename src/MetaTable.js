@@ -12,6 +12,7 @@ const TableHeadline = styled.h3`
 
 const IntroParagraph = styled.p`
   font-size: 1rem;
+  margin-top: 2rem;
 `;
 
 const TableIntroParagraph = styled.p`
@@ -40,7 +41,10 @@ function MetaTable({ metaData, seats }) {
         <IntroParagraph>
           Der Zuschnitt der Wahlkreise hat einen Einfluss auf die wahrscheinlich
           erzielten Erstimmen. Bei angenommenen Stimmen wie bei der letzten
-          Abgeordnetenhauswahl 2021 ergäbe sich folgendes Bild.
+          Abgeordnetenhauswahl 2021 ergäbe sich folgendes Bild der direkt
+          gewählten Abgeordneten. Die tatsächliche Zusammensetzung der Berliner
+          Bundestagsabgeordneten hängt auch noch von weiteren Faktoren wie dem
+          Zweitstimmenergebnis und der Nachfolgeregelung für Überhangmandate ab.
         </IntroParagraph>
         <StyledTable
           pagination={false}
@@ -74,7 +78,7 @@ function MetaTable({ metaData, seats }) {
             },
           ]}
         />
-        <IntroParagraph style={{ marginTop: "2rem" }}>
+        <IntroParagraph>
           Die vorgeschlagenen Varianten lassen sich zudem nach verschiedenen
           Kriterien beurteilen, die in der Forschung oder Rechtslage
           herangezogen werden.

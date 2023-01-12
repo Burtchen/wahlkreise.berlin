@@ -23,6 +23,7 @@ import MapView from "./MapView";
 import ResultsTable from "./ResultsTable";
 import SeatCircles from "./SeatCircles";
 import Footer from "./components/Footer";
+import Header from "./components/Header";
 
 const jsonData = JSON.parse(raw("./data/btw-varianten.json"));
 
@@ -117,7 +118,7 @@ const metaData = jsonData.reduce(
   }
 );
 
-const { Header, Content } = Layout;
+const { Content } = Layout;
 const { Group: RadioGroup, Button: RadioButton } = Radio;
 
 export const FullWidthElement = styled.div`
@@ -299,9 +300,7 @@ function App() {
 
   return (
     <div className="App">
-      <Header>
-        <h1 style={{ color: "#22223B" }}>Der Atlas der Berliner Wahlkreise</h1>
-      </Header>
+      <Header />
       <StyledContent>
         <FullWidthElement>
           <p>
@@ -309,12 +308,16 @@ function App() {
             <a href="https://www.bundestag.de/dokumente/textarchiv/2022/kw45-pa-kommission-wahlrecht-wahlrechtsreform-918172">
               Neuzuschnitts der Wahlkreise für künftige Bundestagswahlen
             </a>{" "}
-            verliert Berlin einen seiner zwölf Wahlkreise, die bisher
-            weitgestehend den Stadtbezirken entsprachen. Die Berliner
-            Landeswahlleitung hat für diese Neuordnung zwei Vorschläge
-            vorgelegt. Diese Seite stellt diese Varianten und ihre Auswirkungen
-            auf die direkt gewählten Sitze (Erststimme) im Vergleich mit der
-            bestehenden Zusammensetzung sowie vorgeschlagenen Alternativen vor.
+            verliert Berlin einen seiner zwölf Wahlkreise. Bisher hatte Berlin
+            zwölf Wahlkreise - und zwölf Stadtbezirke, die auch fast genau
+            aufeinander passten.
+          </p>
+          <p>
+            Die Berliner Landeswahlleitung hat für die Neuordnung zwei
+            Vorschläge vorgelegt. Diese Seite stellt diese Varianten und ihre
+            Auswirkungen auf die direkt gewählten Sitze (Erststimme) im
+            Vergleich mit der bestehenden Zusammensetzung sowie vorgeschlagenen
+            Alternativen vor.
           </p>
         </FullWidthElement>
         <FullWidthElement>
