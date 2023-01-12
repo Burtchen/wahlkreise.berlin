@@ -393,7 +393,11 @@ function App() {
         {!buildModeActive && (
           <>
             <FullWidthElement
-              style={{ display: "flex", justifyContent: "space-evenly" }}
+              style={{
+                display: "flex",
+                justifyContent: "space-evenly",
+                textAlign: "center",
+              }}
             >
               {variantGroups.map((group) => (
                 <StyledRadioGroup
