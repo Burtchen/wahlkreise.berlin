@@ -183,6 +183,7 @@ const ConstituencyCol = styled(Col)`
     border-bottom-left-radius: 0;
     border-top-left-radius: 0;
   }
+  margin-bottom: 0.25rem;
 `;
 
 const ConstituencyName = styled.h3`
@@ -493,18 +494,24 @@ function App() {
               .filter(([district]) => visibleDistricts.includes(district))
               .map(([district, constituencies]) => (
                 <Row key={district}>
-                  <Col span={4}>
+                  <Col xs={24} xl={4}>
                     <ConstituencyName>
                       {district.replace("burg", "b'g")}
                     </ConstituencyName>
                   </Col>
-                  {constituencies.map((constituency, index) => {
+                  {constituencies.map((constituency) => {
                     const matchingCustomConstituency = customSelection.find(
                       (setConstituency) =>
                         setConstituency.name === constituency.districtName
                     );
                     return (
-                      <ConstituencyCol span={2} key={constituency.districtName}>
+                      <ConstituencyCol
+                        xs={8}
+                        sm={6}
+                        md={4}
+                        xl={2}
+                        key={constituency.districtName}
+                      >
                         <ConstituencyPrefix>
                           {constituency.districtName.split("-0")[1]}
                         </ConstituencyPrefix>
@@ -548,37 +555,46 @@ function App() {
             textAlign: "center",
           }}
         >
-          {!buildModeActive &&
-            variantGroups.map((group) => (
-              <StyledRadioGroup
-                size="large"
-                key={group.label}
-                onChange={(e) => {
-                  if (e.target.value === null) {
-                    setBuildModeActive(true);
-                  } else {
-                    setActiveVersion(e.target.value);
+          {!buildModeActive && (
+            <>
+              {variantGroups.map((group) => (
+                <StyledRadioGroup
+                  size="large"
+                  key={group.label}
+                  onChange={(e) => {
+                    if (e.target.value === null) {
+                      setBuildModeActive(true);
+                    } else {
+                      setActiveVersion(e.target.value);
+                    }
+                  }}
+                  value={
+                    group.options.find(
+                      (option) => option.value === activeVersion
+                    )
+                      ? activeVersion
+                      : undefined
                   }
-                }}
-                value={
-                  group.options.find((option) => option.value === activeVersion)
-                    ? activeVersion
-                    : undefined
+                >
+                  {group.options.map((option) => (
+                    <StyledRadioButton key={option.value} value={option.value}>
+                      {option.label}
+                    </StyledRadioButton>
+                  ))}
+                </StyledRadioGroup>
+              ))}
+              <StyledSelect
+                value={activeVersion}
+                id="select-active-version"
+                onChange={(newValue) =>
+                  newValue === null
+                    ? setBuildModeActive(true)
+                    : setActiveVersion(newValue)
                 }
-              >
-                {group.options.map((option) => (
-                  <StyledRadioButton key={option.value} value={option.value}>
-                    {option.label}
-                  </StyledRadioButton>
-                ))}
-              </StyledRadioGroup>
-            ))}
-          <StyledSelect
-            value={activeVersion}
-            id="select-active-version"
-            onChange={(newValue) => setActiveVersion(newValue)}
-            options={variantGroups}
-          />
+                options={variantGroups}
+              />
+            </>
+          )}
         </FullWidthElement>
         <FullWidthElement>
           <Tabs
