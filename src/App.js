@@ -20,7 +20,6 @@ import {
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
-import raw from "raw.macro";
 import MetaTable from "./MetaTable";
 import MapView from "./MapView";
 import ResultsTable from "./ResultsTable";
@@ -28,9 +27,9 @@ import SeatCircles from "./SeatCircles";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 
-const predefinedData = JSON.parse(raw("./data/btw-varianten.json"));
-const constituencyAssignments = JSON.parse(raw("./data/btw-kreise.json"));
-const stateLevelConstituencies = JSON.parse(raw("./data/agh-kreise.json"));
+import STATE_CONSTITUENCY_ASSIGNMENTS from "./data/StateConstituencies";
+import ELECTION_VERSIONS from "./data/ElectionVersions";
+import STATE_CONSTITUENCIES_WITH_RESULTS from "./data/StateConstituenciesWithResults";
 
 export const ELIGIBLE_VOTERS = "Wahlberechtigte";
 export const CONSTITUENCY = "Wahlkreis";
@@ -39,11 +38,11 @@ export const INEFFICIENT_MAJOR_PARTY_VOTES = "Ineffizient verteilte Stimmen";
 const GAP_BETWEEN_FIRST_AND_SECOND = "Abstand Platz 1 zu 2";
 
 const constituenciesByDistrict = groupBy(
-  constituencyAssignments,
+  STATE_CONSTITUENCY_ASSIGNMENTS,
   (constituency) => constituency.districtName.split("-0")[0]
 );
 
-const metaData = predefinedData.reduce(
+const metaData = ELECTION_VERSIONS.reduce(
   (acc, version) => {
     const justTheConstituencies = version.filter(
       (row) => row[DEVIATION] && row[DEVIATION] !== -10
@@ -227,7 +226,7 @@ export const ConstituencyCircle = styled.div`
     isNewSeat || isLostSeat ? "black" : "transparent"};
 `;
 
-const titles = predefinedData.map((version) => version[0].title);
+const titles = ELECTION_VERSIONS.map((version) => version[0].title);
 
 const variantGroups = [
   {
@@ -286,7 +285,7 @@ export const partyColor = {
   "DIE LINKE": "#9b00cc",
 };
 
-const allTheSeats = predefinedData.map((version) => ({
+const allTheSeats = ELECTION_VERSIONS.map((version) => ({
   version: version[0].title,
   seats: getSeats(version),
 }));
@@ -323,7 +322,7 @@ const mapConstituencyAssignments = (code) =>
   groupBy(
     code.split("").map((letter, index) => {
       const districtName = orderedConstituencyList[index].districtName;
-      const matchingStateLevelConstituency = stateLevelConstituencies.find(
+      const matchingStateLevelConstituency = STATE_CONSTITUENCIES_WITH_RESULTS.find(
         (constituency) => constituency["AGH-Wahlkreis"] === districtName
       );
       return {
@@ -404,7 +403,7 @@ function App() {
 
   const dataForThisVersion = isCustomVersion(activeVersion)
     ? convertCodeToElectionData(activeVersion)
-    : predefinedData.find((version) => version[0].title === activeVersion);
+    : ELECTION_VERSIONS.find((version) => version[0].title === activeVersion);
 
   const projectedSeats = isCustomVersion(activeVersion)
     ? getSeats(Object.values(dataForThisVersion[0]).filter(isObject))
@@ -613,7 +612,7 @@ function App() {
                               mapConstituencyAssignments(activeVersion)
                             )
                           )
-                        : constituencyAssignments
+                        : STATE_CONSTITUENCY_ASSIGNMENTS
                     }
                     dataForThisVersion={dataForThisVersion}
                     showResults={false}
@@ -633,7 +632,7 @@ function App() {
                               mapConstituencyAssignments(activeVersion)
                             )
                           )
-                        : constituencyAssignments
+                        : STATE_CONSTITUENCY_ASSIGNMENTS
                     }
                     dataForThisVersion={dataForThisVersion}
                     showResults={true}
