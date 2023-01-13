@@ -1,11 +1,12 @@
 import "./App.css";
 
-import { Layout, Select, Radio, Tabs, Button, Row, Col } from "antd";
+import { Layout, Select, Radio, Tabs, Button, Row, Col, Alert } from "antd";
 import {
   cloneDeep,
   countBy,
   flatten,
   groupBy,
+  isNumber,
   map,
   maxBy,
   meanBy,
@@ -311,6 +312,8 @@ const getCodeFromCustomSelection = (customData) =>
 
 export const isCustomVersion = (version) => version.match(/^[A-Fa-f0-9]+$/);
 
+const TOTAL_ELIGIBLE_VOTES = 2468919;
+
 const mapConstituencyAssignments = (code) =>
   groupBy(
     code.split("").map((letter, index) => {
@@ -333,30 +336,35 @@ const mapConstituencyAssignments = (code) =>
     "constituencyNumber"
   );
 
-const convertCodeToElectionData = (code) => {
-  const mappedConstituencies = mapConstituencyAssignments(code); // todo: memo
-  // todo: deviation
-  const calculatedConstituencies = map(
-    mappedConstituencies,
-    (groupOfStateLevelConstituencies, constituencyKey) => {
-      return [
-        ...PARTIES_INCLUDING_OTHERS,
-        ELIGIBLE_VOTERS,
-        CONSTITUENCY,
-      ].reduce(
-        (acc, key) => ({
-          ...acc,
-          [key]:
-            key === CONSTITUENCY
-              ? constituencyKey
-              : sumBy(groupOfStateLevelConstituencies, key),
-        }),
-        {}
-      );
-    }
-  );
-  return [{ title: code, ...calculatedConstituencies }];
-};
+const convertCodeToElectionData = (code) => [
+  {
+    title: code,
+    ...map(
+      mapConstituencyAssignments(code),
+      (groupOfStateLevelConstituencies, constituencyKey) => {
+        return [
+          ...PARTIES_INCLUDING_OTHERS,
+          ELIGIBLE_VOTERS,
+          CONSTITUENCY,
+          DEVIATION,
+        ].reduce(
+          (acc, key) => ({
+            ...acc,
+            [key]:
+              key === CONSTITUENCY
+                ? constituencyKey
+                : key === DEVIATION
+                ? sumBy(groupOfStateLevelConstituencies, ELIGIBLE_VOTERS) /
+                    (TOTAL_ELIGIBLE_VOTES / 11) -
+                  1
+                : sumBy(groupOfStateLevelConstituencies, key),
+          }),
+          {}
+        );
+      }
+    ),
+  },
+];
 
 const districtList = [
   "Mitte",
@@ -456,8 +464,25 @@ function App() {
                   </p>
                 )}
               </Col>
-              <Col span={24}></Col>
             </Row>
+            {map(dataForThisVersion[0], DEVIATION).filter(
+              (deviationForConstituency) =>
+                isNumber(deviationForConstituency) &&
+                Math.abs(deviationForConstituency) > 0.15
+            ).length > 0 && (
+              <Alert
+                message="Die Größe mindestens eines Wahlkreises weicht um mehr als 15% vom Mittelwert ab."
+                type="warning"
+                style={{ marginBottom: "1rem" }}
+              />
+            )}
+            {Object.keys(omit(dataForThisVersion[0], "title")).length > 11 && (
+              <Alert
+                message="Sie haben mehr als 11 Bundestagswahlkreise ausgewählt - die Reduktion auf 11 ist aber genau das Anliegen der Reform."
+                type="warning"
+                style={{ marginBottom: "1rem" }}
+              />
+            )}
             {Object.entries(constituenciesByDistrict)
               .filter(([district]) => visibleDistricts.includes(district))
               .map(([district, constituencies]) => (
@@ -609,15 +634,6 @@ function App() {
             originalSeats={originalSeats}
           />
         )}
-        <FullWidthElement>
-          <Button
-            onClick={() => {
-              setBuildModeActive(true);
-            }}
-          >
-            Eigene Variante erstellen!
-          </Button>
-        </FullWidthElement>
         <MetaTable seats={allTheSeats} metaData={metaData} />
       </StyledContent>
       <Footer />
