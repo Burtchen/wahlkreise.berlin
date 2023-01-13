@@ -9,6 +9,7 @@ import {
   ELIGIBLE_VOTERS,
   FullWidthElement,
   INEFFICIENT_MAJOR_PARTY_VOTES,
+  isCustomVersion,
   partiesWithDirectSeats,
 } from "./App";
 import { Popover } from "antd";
@@ -37,23 +38,34 @@ const MapView = ({
     groupBy(
       constituencyAssignments.map((constituency) => ({
         name: constituency.districtName,
-        currentConstituency: constituency[activeVersion],
+        currentConstituency: isCustomVersion(activeVersion)
+          ? constituency.constituencyNumber
+          : constituency[activeVersion],
       })),
       "currentConstituency"
     ),
     (object, constituencyNumber) => {
-      const electionDataForTheFederalConstituency = omit(
-        dataForThisVersion.find(
-          (constituency) =>
-            constituency[CONSTITUENCY] === parseInt(constituencyNumber)
-        ),
-        [ELIGIBLE_VOTERS, INEFFICIENT_MAJOR_PARTY_VOTES]
-      );
+      const electionDataForTheFederalConstituency = isCustomVersion(
+        activeVersion
+      )
+        ? dataForThisVersion[0]
+        : omit(
+            dataForThisVersion.find(
+              (constituency) =>
+                constituency[CONSTITUENCY] === parseInt(constituencyNumber)
+            ),
+            [ELIGIBLE_VOTERS, INEFFICIENT_MAJOR_PARTY_VOTES]
+          );
 
       const partyVotes = sortBy(
-        [...partiesWithDirectSeats, "AfD", "FDP"].map((name) => {
-          return { name, votes: electionDataForTheFederalConstituency[name] };
-        }),
+        [...partiesWithDirectSeats, "AfD", "FDP"].map((name) => ({
+          name,
+          votes: isCustomVersion(activeVersion)
+            ? Object.values(electionDataForTheFederalConstituency).find(
+                (a) => a[CONSTITUENCY] === constituencyNumber
+              )[name]
+            : electionDataForTheFederalConstituency[name],
+        })),
         "votes"
       ).reverse();
 

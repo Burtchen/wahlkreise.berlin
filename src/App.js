@@ -25,9 +25,9 @@ import SeatCircles from "./SeatCircles";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 
-const jsonData = JSON.parse(raw("./data/btw-varianten.json"));
-
+const predefinedData = JSON.parse(raw("./data/btw-varianten.json"));
 const constituencyAssignments = JSON.parse(raw("./data/btw-kreise.json"));
+const stateLevelConstituencies = JSON.parse(raw("./data/agh-kreise.json"));
 
 export const ELIGIBLE_VOTERS = "Wahlberechtigte";
 export const CONSTITUENCY = "Wahlkreis";
@@ -40,7 +40,7 @@ const constituenciesByDistrict = groupBy(
   (constituency) => constituency.districtName.split("-0")[0]
 );
 
-const metaData = jsonData.reduce(
+const metaData = predefinedData.reduce(
   (acc, version) => {
     const justTheConstituencies = version.filter(
       (row) => row[DEVIATION] && row[DEVIATION] !== -10
@@ -143,13 +143,17 @@ const StyledRadioGroup = styled(RadioGroup)`
 
 const StyledRadioButton = styled(RadioButton)`
   display: inline-flex;
+  vertical-align: top;
   align-items: center;
   color: #333333;
   height: 80px !important;
   padding-left: 12px;
   padding-right: 12px;
   font-size: 0.8rem !important;
-  width: 140px;
+  width: 128px;
+  text-align: center;
+  align-content: center;
+  justify-content: center;
   line-height: 1.4 !important;
 `;
 
@@ -171,6 +175,40 @@ const ConstituencySelect = styled(Select)`
   }
 `;
 
+const ConstituencyCol = styled(Col)`
+  .ant-select-selector {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+  }
+`;
+
+const ConstituencyName = styled.h3`
+  font-size: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 400;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const ConstituencyPrefix = styled.span`
+  background: #fafafa;
+  width: 18px;
+  height: 32px;
+  display: inline-block;
+  position: relative;
+  font-size: 14px;
+  border: 1px solid #d9d9d9;
+  border-right: none;
+  border-bottom-left-radius: 5px;
+  border-top-left-radius: 5px;
+  padding-left: 6px;
+  padding-top: 8px;
+  box-sizing: border-box;
+  font-weight: 400;
+  line-height: 1;
+`;
+
 export const ConstituencyCircle = styled.div`
   border-radius: 50%;
   display: inline-block;
@@ -185,7 +223,7 @@ export const ConstituencyCircle = styled.div`
     isNewSeat || isLostSeat ? "black" : "transparent"};
 `;
 
-const titles = jsonData.map((version) => version[0].title);
+const titles = predefinedData.map((version) => version[0].title);
 
 const variantGroups = [
   {
@@ -202,10 +240,13 @@ const variantGroups = [
   },
   {
     label: "Eigene Vorschläge",
-    options: [...titles.slice(3, 7)].map((title) => ({
-      label: title,
-      value: title,
-    })),
+    options: [
+      ...[...titles.slice(3, 7)].map((title) => ({
+        label: title.replace("Variante", ""),
+        value: title,
+      })),
+      { label: "Eigene Variante bauen!", value: null },
+    ],
   },
 ];
 
@@ -239,7 +280,7 @@ export const partyColor = {
   "DIE LINKE": "#9b00cc",
 };
 
-const allTheSeats = jsonData.map((version) => ({
+const allTheSeats = predefinedData.map((version) => ({
   version: version[0].title,
   seats: getSeats(version),
 }));
@@ -247,6 +288,12 @@ const allTheSeats = jsonData.map((version) => ({
 const originalSeats = allTheSeats[0].seats;
 
 export const partiesWithDirectSeats = Object.keys(originalSeats);
+const PARTIES_INCLUDING_OTHERS = [
+  ...partiesWithDirectSeats,
+  "AfD",
+  "FDP",
+  "Sonstige",
+];
 
 const orderedConstituencyList = flatten(
   Object.values(constituenciesByDistrict)
@@ -259,30 +306,80 @@ const districtDataForState = orderedConstituencyList.map((constituency) => ({
 
 const getCodeFromCustomSelection = (customData) =>
   customData
-    .map((setConstituency) => (setConstituency.constituency - 73).toString(16)) // 0 = not set
+    .map((setConstituency) => (setConstituency.constituency - 74).toString(16)) // 0 = not set
     .join("");
 
-const convertCodeToElectionData = (code) => {
-  const mappedConstituencies = groupBy(
-    code.split("").map((letter, index) => ({
-      districtName: orderedConstituencyList[index].districtName,
-      constituencyNumber: parseInt(letter, 16) + 73,
-    })),
+export const isCustomVersion = (version) => version.match(/^[A-Fa-f0-9]+$/);
+
+const mapConstituencyAssignments = (code) =>
+  groupBy(
+    code.split("").map((letter, index) => {
+      const districtName = orderedConstituencyList[index].districtName;
+      const matchingStateLevelConstituency = stateLevelConstituencies.find(
+        (constituency) => constituency["AGH-Wahlkreis"] === districtName
+      );
+      return {
+        districtName,
+        constituencyNumber: parseInt(letter, 16) + 74,
+        ...[...PARTIES_INCLUDING_OTHERS, ELIGIBLE_VOTERS].reduce(
+          (acc, key) => ({
+            ...acc,
+            [key]: letter !== "0" ? matchingStateLevelConstituency[key] : 0,
+          }),
+          {}
+        ),
+      };
+    }),
     "constituencyNumber"
   );
-  console.log(mappedConstituencies);
-  return code;
+
+const convertCodeToElectionData = (code) => {
+  const mappedConstituencies = mapConstituencyAssignments(code); // todo: memo
+  // todo: deviation
+  const calculatedConstituencies = map(
+    mappedConstituencies,
+    (groupOfStateLevelConstituencies, constituencyKey) => {
+      return [
+        ...PARTIES_INCLUDING_OTHERS,
+        ELIGIBLE_VOTERS,
+        CONSTITUENCY,
+      ].reduce(
+        (acc, key) => ({
+          ...acc,
+          [key]:
+            key === CONSTITUENCY
+              ? constituencyKey
+              : sumBy(groupOfStateLevelConstituencies, key),
+        }),
+        {}
+      );
+    }
+  );
+  return [{ title: code, ...calculatedConstituencies }];
 };
+
+const districtList = [
+  "Mitte",
+  "Friedrichshain-Kreuzberg",
+  "Pankow",
+  "Charlottenburg-Wilmersdorf",
+  "Spandau",
+  "Steglitz-Zehlendorf",
+  "Tempelhof-Schoeneberg",
+  "Neukoelln",
+  "Treptow-Koepenick",
+  "Marzahn-Hellersdorf",
+  "Lichtenberg",
+  "Reinickendorf",
+];
 
 function App() {
   const [activeVersion, setActiveVersion] = useState(titles[0]);
+  const [visibleDistricts, setVisibleDistricts] = useState([]);
   const [buildModeActive, setBuildModeActive] = useState(false);
-  const [customSelection, setCustomSelection] = useState([
-    ...orderedConstituencyList.map((constituency) => ({
-      constituency: 73, // = 0
-      name: constituency.districtName,
-    })),
-  ]);
+  const [customSelection, setCustomSelection] = useState(
+    districtDataForState // always prepopuluate version 1
+  );
 
   useEffect(() => {
     if (buildModeActive && customSelection.length > 0) {
@@ -290,9 +387,9 @@ function App() {
     }
   }, [customSelection, buildModeActive]);
 
-  const dataForThisVersion = activeVersion.match(/^[A-Fa-f0-9]+$/)
+  const dataForThisVersion = isCustomVersion(activeVersion)
     ? convertCodeToElectionData(activeVersion)
-    : jsonData.find((version) => version[0].title === activeVersion);
+    : predefinedData.find((version) => version[0].title === activeVersion);
 
   const projectedSeats = allTheSeats.find(
     (group) => group.version === activeVersion
@@ -320,159 +417,207 @@ function App() {
             Alternativen vor.
           </p>
         </FullWidthElement>
-        <FullWidthElement>
-          <Button
-            style={{ display: "none" }}
-            onClick={() => {
-              setBuildModeActive(true);
-            }}
-          >
-            Eigene Variante bauen
-          </Button>
-        </FullWidthElement>
         {buildModeActive && (
-          <div>
-            <Button onClick={() => setCustomSelection(districtDataForState)}>
-              Mit Variante 1 vorbelegen
-            </Button>
+          <FullWidthElement style={{ marginBottom: "2rem" }}>
+            <h3>SimLandeswahlleitung: Eigene Version bauen!</h3>
             <Row>
-              {Object.entries(constituenciesByDistrict).map(
-                ([district, constituencies]) => (
-                  <Col span={4} key={district}>
-                    <h3>{district}</h3>
-                    <ul style={{ listStyleType: "none" }}>
-                      {constituencies.map((constituency) => {
-                        const matchingCustomConstituency = customSelection.find(
-                          (setConstituency) =>
-                            setConstituency.name === constituency.districtName
-                        );
-                        let value;
-                        if (
-                          matchingCustomConstituency &&
-                          matchingCustomConstituency.constituency !== 73
-                        ) {
-                          value = matchingCustomConstituency.constituency;
-                        } else {
-                          value = undefined;
-                        }
-                        return (
-                          <li key={constituency.districtName}>
-                            {constituency.districtName.split("-0")[1]}
-                            <ConstituencySelect
-                              value={value}
-                              onChange={(newConstituency) => {
-                                const existingIndex = customSelection.findIndex(
-                                  (setConstituency) =>
-                                    setConstituency.name ===
-                                    constituency.districtName
-                                );
-
-                                const clonedSelection =
-                                  cloneDeep(customSelection);
-                                clonedSelection[existingIndex] = {
-                                  name: constituency.districtName,
-                                  constituency: newConstituency,
-                                };
-                                setCustomSelection([...clonedSelection]);
-                              }}
-                              options={times(12, (index) => ({
-                                label: `WK ${index + 74}`,
-                                value: index + 74,
-                              }))}
-                            />{" "}
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </Col>
-                )
-              )}
+              <Col span={24}>
+                <Select
+                  style={{ minWidth: "200px", marginBottom: "0.75rem" }}
+                  value={visibleDistricts}
+                  mode="multiple"
+                  id="district-selector"
+                  placeholder="Bezirk(e) auswählen"
+                  options={districtList.map((district) => ({
+                    value: district,
+                    label: district,
+                  }))}
+                  onChange={setVisibleDistricts}
+                />
+              </Col>
+              <Col span={24}>
+                {visibleDistricts.length < 1 ? (
+                  <label
+                    htmlFor="district-selector"
+                    style={{ fontSize: "0.8rem" }}
+                  >
+                    Im Feld die Namen der Bezirke eingeben, deren Wahlkreise Sie
+                    anpassen möchten, oder{" "}
+                    <Button onClick={() => setVisibleDistricts(districtList)}>
+                      alle Bezirke auswählen
+                    </Button>
+                    .
+                  </label>
+                ) : (
+                  <p style={{ fontSize: "0.8rem" }}>
+                    Die Zahl vor dem Dropdown entspricht dem
+                    Abgeordnetenhauswahlkreis des Bezirks. Der Wert des
+                    Dropdowns dem Bundestagswahlkreis, den Sie verändern können.
+                  </p>
+                )}
+              </Col>
+              <Col span={24}></Col>
             </Row>
-          </div>
-        )}
-        {!buildModeActive && (
-          <>
-            <FullWidthElement
-              style={{
-                display: "flex",
-                justifyContent: "space-evenly",
-                textAlign: "center",
-              }}
-            >
-              {variantGroups.map((group) => (
-                <StyledRadioGroup
-                  size="large"
-                  key={group.label}
-                  onChange={(e) => setActiveVersion(e.target.value)}
-                  value={
-                    group.options.find(
-                      (option) => option.value === activeVersion
-                    )
-                      ? activeVersion
-                      : undefined
-                  }
-                >
-                  {group.options.map((option) => (
-                    <StyledRadioButton key={option.value} value={option.value}>
-                      {option.label}
-                    </StyledRadioButton>
-                  ))}
-                </StyledRadioGroup>
-              ))}
-              <StyledSelect
-                value={activeVersion}
-                id="select-active-version"
-                onChange={(newValue) => setActiveVersion(newValue)}
-                options={variantGroups}
-              />
-            </FullWidthElement>
+            {Object.entries(constituenciesByDistrict)
+              .filter(([district]) => visibleDistricts.includes(district))
+              .map(([district, constituencies]) => (
+                <Row key={district}>
+                  <Col span={4}>
+                    <ConstituencyName>
+                      {district.replace("burg", "b'g")}
+                    </ConstituencyName>
+                  </Col>
+                  {constituencies.map((constituency, index) => {
+                    const matchingCustomConstituency = customSelection.find(
+                      (setConstituency) =>
+                        setConstituency.name === constituency.districtName
+                    );
+                    return (
+                      <ConstituencyCol span={2} key={constituency.districtName}>
+                        <ConstituencyPrefix>
+                          {constituency.districtName.split("-0")[1]}
+                        </ConstituencyPrefix>
+                        <ConstituencySelect
+                          value={
+                            matchingCustomConstituency &&
+                            matchingCustomConstituency.constituency !== 74
+                              ? matchingCustomConstituency.constituency
+                              : undefined
+                          }
+                          onChange={(newConstituency) => {
+                            const existingIndex = customSelection.findIndex(
+                              (setConstituency) =>
+                                setConstituency.name ===
+                                constituency.districtName
+                            );
 
-            <FullWidthElement>
-              <Tabs
-                defaultActiveKey="1"
-                items={[
-                  {
-                    label: `Wahlkreiszuschnitte`,
-                    key: "1",
-                    children: (
-                      <MapView
-                        activeVersion={activeVersion}
-                        constituencyAssignments={constituencyAssignments}
-                        dataForThisVersion={dataForThisVersion}
-                        showResults={false}
-                      />
-                    ),
-                  },
-                  {
-                    label: `Erststimmenverteilung`,
-                    key: "2",
-                    children: (
-                      <MapView
-                        activeVersion={activeVersion}
-                        constituencyAssignments={constituencyAssignments}
-                        dataForThisVersion={dataForThisVersion}
-                        showResults={true}
-                      />
-                    ),
-                  },
-                  {
-                    label: `Tabelle`,
-                    key: "3",
-                    children: (
-                      <ResultsTable dataForThisVersion={dataForThisVersion} />
-                    ),
-                  },
-                ]}
-              />
-            </FullWidthElement>
-          </>
+                            const clonedSelection = cloneDeep(customSelection);
+                            clonedSelection[existingIndex] = {
+                              name: constituency.districtName,
+                              constituency: newConstituency,
+                            };
+                            setCustomSelection([...clonedSelection]);
+                          }}
+                          options={times(12, (index) => ({
+                            label: `WK ${index + 75}`,
+                            value: index + 75,
+                          }))}
+                        />
+                      </ConstituencyCol>
+                    );
+                  })}
+                </Row>
+              ))}
+          </FullWidthElement>
         )}
+        <FullWidthElement
+          style={{
+            display: "flex",
+            justifyContent: "space-evenly",
+            textAlign: "center",
+          }}
+        >
+          {!buildModeActive &&
+            variantGroups.map((group) => (
+              <StyledRadioGroup
+                size="large"
+                key={group.label}
+                onChange={(e) => {
+                  if (e.target.value === null) {
+                    setBuildModeActive(true);
+                  } else {
+                    setActiveVersion(e.target.value);
+                  }
+                }}
+                value={
+                  group.options.find((option) => option.value === activeVersion)
+                    ? activeVersion
+                    : undefined
+                }
+              >
+                {group.options.map((option) => (
+                  <StyledRadioButton key={option.value} value={option.value}>
+                    {option.label}
+                  </StyledRadioButton>
+                ))}
+              </StyledRadioGroup>
+            ))}
+          <StyledSelect
+            value={activeVersion}
+            id="select-active-version"
+            onChange={(newValue) => setActiveVersion(newValue)}
+            options={variantGroups}
+          />
+        </FullWidthElement>
+        <FullWidthElement>
+          <Tabs
+            defaultActiveKey="1"
+            items={[
+              {
+                label: `Wahlkreiszuschnitte`,
+                key: "1",
+                children: (
+                  <MapView
+                    activeVersion={activeVersion}
+                    constituencyAssignments={
+                      activeVersion.match(/^[A-Fa-f0-9]+$/)
+                        ? flatten(
+                            Object.values(
+                              mapConstituencyAssignments(activeVersion)
+                            )
+                          )
+                        : constituencyAssignments
+                    }
+                    dataForThisVersion={dataForThisVersion}
+                    showResults={false}
+                  />
+                ),
+              },
+              {
+                label: `Erststimmenverteilung`,
+                key: "2",
+                children: (
+                  <MapView
+                    activeVersion={activeVersion}
+                    constituencyAssignments={
+                      activeVersion.match(/^[A-Fa-f0-9]+$/)
+                        ? flatten(
+                            Object.values(
+                              mapConstituencyAssignments(activeVersion)
+                            )
+                          )
+                        : constituencyAssignments
+                    }
+                    dataForThisVersion={dataForThisVersion}
+                    showResults={true}
+                  />
+                ),
+              },
+              {
+                label: `Tabelle`,
+                key: "3",
+                children: (
+                  <ResultsTable dataForThisVersion={dataForThisVersion} />
+                ),
+              },
+            ]}
+          />
+        </FullWidthElement>
         {projectedSeats && (
           <SeatCircles
             projectedSeats={projectedSeats}
             originalSeats={originalSeats}
           />
         )}
+        <FullWidthElement>
+          <Button
+            onClick={() => {
+              setBuildModeActive(true);
+            }}
+          >
+            Eigene Variante erstellen!
+          </Button>
+        </FullWidthElement>
         <MetaTable seats={allTheSeats} metaData={metaData} />
       </StyledContent>
       <Footer />
