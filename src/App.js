@@ -7,6 +7,8 @@ import {
   flatten,
   groupBy,
   isNumber,
+  isObject,
+  isUndefined,
   map,
   maxBy,
   meanBy,
@@ -252,27 +254,29 @@ const variantGroups = [
 ];
 
 const getSeats = (tableData) =>
-  tableData.slice(1).reduce((acc, row) => {
-    const winningParty = maxBy(
-      Object.entries(
-        omit(row, [
-          ELIGIBLE_VOTERS,
-          INEFFICIENT_MAJOR_PARTY_VOTES,
-          CONSTITUENCY,
-          DEVIATION,
-        ])
-      ),
-      (entryPair) => entryPair[1]
-    );
-    return winningParty
-      ? {
-          ...acc,
-          [winningParty[0]]: acc[winningParty[0]]
-            ? acc[winningParty[0]] + 1
-            : 1,
-        }
-      : acc;
-  }, {});
+  tableData
+    .filter((row) => !isUndefined(row[CONSTITUENCY]))
+    .reduce((acc, row) => {
+      const winningParty = maxBy(
+        Object.entries(
+          omit(row, [
+            ELIGIBLE_VOTERS,
+            INEFFICIENT_MAJOR_PARTY_VOTES,
+            CONSTITUENCY,
+            DEVIATION,
+          ])
+        ),
+        (entryPair) => entryPair[1]
+      );
+      return winningParty
+        ? {
+            ...acc,
+            [winningParty[0]]: acc[winningParty[0]]
+              ? acc[winningParty[0]] + 1
+              : 1,
+          }
+        : acc;
+    }, {});
 
 export const partyColor = {
   SPD: "#cc0000",
@@ -355,9 +359,10 @@ const convertCodeToElectionData = (code) => [
               key === CONSTITUENCY
                 ? constituencyKey
                 : key === DEVIATION
-                ? sumBy(groupOfStateLevelConstituencies, ELIGIBLE_VOTERS) /
+                ? (sumBy(groupOfStateLevelConstituencies, ELIGIBLE_VOTERS) /
                     (TOTAL_ELIGIBLE_VOTES / 11) -
-                  1
+                    1) *
+                  10
                 : sumBy(groupOfStateLevelConstituencies, key),
           }),
           {}
@@ -400,9 +405,9 @@ function App() {
     ? convertCodeToElectionData(activeVersion)
     : predefinedData.find((version) => version[0].title === activeVersion);
 
-  const projectedSeats = allTheSeats.find(
-    (group) => group.version === activeVersion
-  )?.seats;
+  const projectedSeats = isCustomVersion(activeVersion)
+    ? getSeats(Object.values(dataForThisVersion[0]).filter(isObject))
+    : allTheSeats.find((group) => group.version === activeVersion)?.seats;
 
   return (
     <div className="App">
@@ -469,7 +474,7 @@ function App() {
             {map(dataForThisVersion[0], DEVIATION).filter(
               (deviationForConstituency) =>
                 isNumber(deviationForConstituency) &&
-                Math.abs(deviationForConstituency) > 0.15
+                Math.abs(deviationForConstituency) > 1.5
             ).length > 0 && (
               <Alert
                 message="Die Größe mindestens eines Wahlkreises weicht um mehr als 15% vom Mittelwert ab."
