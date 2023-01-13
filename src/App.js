@@ -246,7 +246,7 @@ const variantGroups = [
     label: "Eigene Vorschläge",
     options: [
       ...[...titles.slice(3, 7)].map((title) => ({
-        label: title.replace("Variante", ""),
+        label: title.replace("Variante", "").replaceAll("ue", "ü"),
         value: title,
       })),
       { label: "Eigene Variante bauen!", value: null },
@@ -445,7 +445,7 @@ function App() {
                   placeholder="Bezirk(e) auswählen"
                   options={districtList.map((district) => ({
                     value: district,
-                    label: district,
+                    label: district.replaceAll("oe", "ö"),
                   }))}
                   onChange={setVisibleDistricts}
                 />

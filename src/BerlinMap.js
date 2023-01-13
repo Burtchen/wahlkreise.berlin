@@ -203,7 +203,10 @@ const BerlinMap = ({ constituencyAssignments, showResults }) => (
           ) : (
             <p>
               Umfasst die Abgeordnetenhaus-Wahlkreise{" "}
-              {constituencyData.stateLevelConstituencies.join(", ")}.
+              {constituencyData.stateLevelConstituencies
+                .join(", ")
+                .replaceAll("oe", "ö")}
+              .
             </p>
           )
         }

@@ -48,13 +48,11 @@ function MetaTable({ metaData, seats }) {
         </IntroParagraph>
         <StyledTable
           pagination={false}
-          dataSource={seats.map((versionWithSeatInfo, index) => {
-            return {
-              key: index,
-              version: versionWithSeatInfo.version,
-              seats: versionWithSeatInfo.seats,
-            };
-          })}
+          dataSource={seats.map((versionWithSeatInfo, index) => ({
+            key: index,
+            version: versionWithSeatInfo.version.replaceAll("ue", "ü"),
+            seats: versionWithSeatInfo.seats,
+          }))}
           columns={[
             { key: "version", dataIndex: "version", title: "Variante" },
             {
@@ -100,7 +98,7 @@ function MetaTable({ metaData, seats }) {
               .reverse()
               .map((sortedVersion, index) => ({
                 key: index,
-                version: sortedVersion.version,
+                version: sortedVersion.version.replaceAll("ue", "ü"),
                 inefficientVotesSum: sortedVersion.inefficientVotesSum
                   .toString()
                   .replace(/\B(?=(\d{3})+(?!\d))/g, "."),
@@ -132,7 +130,9 @@ function MetaTable({ metaData, seats }) {
               .slice(0, 7)
               .map((sortedVersion, index) => ({
                 key: index,
-                versionAndConstituency: `Wahlkreis ${sortedVersion.constituency} - ${sortedVersion.version}`,
+                versionAndConstituency: `Wahlkreis ${
+                  sortedVersion.constituency
+                } - ${sortedVersion.version.replaceAll("ue", "ü")}`,
                 gapVotes: sortedVersion.gapVotes
                   .toString()
                   .replace(/\B(?=(\d{3})+(?!\d))/g, "."),
@@ -162,7 +162,7 @@ function MetaTable({ metaData, seats }) {
             dataSource={sortBy(metaData.splitDistricts, 1).map(
               (sortedVersion, index) => ({
                 key: index,
-                version: sortedVersion.version,
+                version: sortedVersion.version.replaceAll("ue", "ü"),
                 splitDistricts:
                   (sortedVersion[2] || 0) +
                   (sortedVersion[3] || 0) +
@@ -187,7 +187,7 @@ function MetaTable({ metaData, seats }) {
           <TableHeadline>Wahlkreisgröße im Schnitt</TableHeadline>
           <TableIntroParagraph>
             1 Person = 1 Stimme - dafür sollten Wahlkreise möglichst gleich groß
-            sein. Die durchschnittliche Abweichung der Versionen.
+            sein. Die durchschnittliche Abweichung der Versionen:
           </TableIntroParagraph>
           <StyledTable
             pagination={false}
@@ -195,7 +195,7 @@ function MetaTable({ metaData, seats }) {
               .reverse()
               .map((sortedVersion, index) => ({
                 key: index,
-                version: sortedVersion.version,
+                version: sortedVersion.version.replaceAll("ue", "ü"),
                 meanDeviation: `${(sortedVersion.meanDeviation * 10).toFixed(
                   1
                 )}%`,
@@ -226,7 +226,9 @@ function MetaTable({ metaData, seats }) {
               .slice(0, 7)
               .map((sortedVersion, index) => ({
                 key: index,
-                versionAndConstituency: `Wahlkreis ${sortedVersion.constituency} - ${sortedVersion.version}`,
+                versionAndConstituency: `Wahlkreis ${
+                  sortedVersion.constituency
+                } - ${sortedVersion.version.replaceAll("ue", "ü")}`,
                 deviation: `${(sortedVersion.deviation * 10).toFixed(1)}%`,
               }))}
             columns={[
