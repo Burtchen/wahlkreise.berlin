@@ -49,8 +49,8 @@ const metaData = ELECTION_VERSIONS.reduce(
     );
 
     if (version[0].title === "Variante 2 der Landeswahlleitung") {
-      acc.splitDistricts = [
-        ...acc.splitDistricts,
+      acc.splitConstituencies = [
+        ...acc.splitConstituencies,
         {
           // hard-coded sad emoji
           version: "Variante 2 der Landeswahlleitung",
@@ -60,18 +60,23 @@ const metaData = ELECTION_VERSIONS.reduce(
         },
       ];
     } else {
-      const districtSplits = Object.entries(constituenciesByDistrict).map(
-        ([districtName, stateConstituencies]) => ({
-          districtName,
-          splits: uniq(map(stateConstituencies, version[0].title)).length,
-        })
-      );
+      const constituencySplits = Object.entries(
+        constituenciesByDistrict
+      ).reduce((acc, [districtName, stateConstituencies]) => {
+        const federalConstituenciesForThisDistrict = uniq(
+          map(stateConstituencies, version[0].title)
+        );
+        federalConstituenciesForThisDistrict.forEach((constituency) => {
+          acc[constituency] = acc[constituency] ? acc[constituency] + 1 : 1;
+        });
+        return acc;
+      }, {});
 
-      acc.splitDistricts = [
-        ...acc.splitDistricts,
+      acc.splitConstituencies = [
+        ...acc.splitConstituencies,
         {
           version: version[0].title,
-          ...countBy(districtSplits, (district) => district.splits),
+          ...countBy(constituencySplits, (v) => v),
         },
       ];
     }
@@ -112,7 +117,7 @@ const metaData = ELECTION_VERSIONS.reduce(
     return acc;
   },
   {
-    splitDistricts: [],
+    splitConstituencies: [],
     meanDeviations: [],
     deviationConstituencies: [],
     inefficientVotesSums: [],
@@ -322,9 +327,10 @@ const mapConstituencyAssignments = (code) =>
   groupBy(
     code.split("").map((letter, index) => {
       const districtName = orderedConstituencyList[index].districtName;
-      const matchingStateLevelConstituency = STATE_CONSTITUENCIES_WITH_RESULTS.find(
-        (constituency) => constituency["AGH-Wahlkreis"] === districtName
-      );
+      const matchingStateLevelConstituency =
+        STATE_CONSTITUENCIES_WITH_RESULTS.find(
+          (constituency) => constituency["AGH-Wahlkreis"] === districtName
+        );
       return {
         districtName,
         constituencyNumber: parseInt(letter, 16) + 74,

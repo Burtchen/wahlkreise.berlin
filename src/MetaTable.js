@@ -152,18 +152,19 @@ function MetaTable({ metaData, seats }) {
           />
         </Col>
         <Col xs={24} md={12} xl={8}>
-          <TableHeadline>Aufgeteilte Bezirke</TableHeadline>
+          <TableHeadline>Aufgeteilte Wahlkreise</TableHeadline>
           <TableIntroParagraph>
-            Je mehr Wahlkreise ein Bezirk umfasst, desto herausfordernder wird
-            die Administration und eine organische Repräsentation "vor Ort".
+            Auf je mehr Bezirke sich ein Wahlkreis erstreckt, desto schwieriger
+            wird die Administration und eine organische Repräsentation "vor
+            Ort".
           </TableIntroParagraph>
           <StyledTable
             pagination={false}
-            dataSource={sortBy(metaData.splitDistricts, 1).map(
+            dataSource={sortBy(metaData.splitConstituencies, 1).map(
               (sortedVersion, index) => ({
                 key: index,
                 version: sortedVersion.version.replaceAll("ue", "ü"),
-                splitDistricts:
+                splitConstituencies:
                   (sortedVersion[2] || 0) +
                   (sortedVersion[3] || 0) +
                   (sortedVersion[4] || 0),
@@ -176,9 +177,9 @@ function MetaTable({ metaData, seats }) {
                 title: "Variante",
               },
               {
-                key: "splitDistricts",
-                dataIndex: "splitDistricts",
-                title: "Aufgeteilte Bezirke",
+                key: "splitConstituencies",
+                dataIndex: "splitConstituencies",
+                title: "Aufgeteilte Wahlkreise",
               },
             ]}
           />
