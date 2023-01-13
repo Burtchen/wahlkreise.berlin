@@ -336,6 +336,7 @@ const mapConstituencyAssignments = (code) =>
     "constituencyNumber"
   );
 
+// todo: fix format instead of all the hoops for table and map view
 const convertCodeToElectionData = (code) => [
   {
     title: code,
@@ -343,10 +344,10 @@ const convertCodeToElectionData = (code) => [
       mapConstituencyAssignments(code),
       (groupOfStateLevelConstituencies, constituencyKey) => {
         return [
-          ...PARTIES_INCLUDING_OTHERS,
-          ELIGIBLE_VOTERS,
           CONSTITUENCY,
+          ELIGIBLE_VOTERS,
           DEVIATION,
+          ...PARTIES_INCLUDING_OTHERS,
         ].reduce(
           (acc, key) => ({
             ...acc,
@@ -622,7 +623,10 @@ function App() {
                 label: `Tabelle`,
                 key: "3",
                 children: (
-                  <ResultsTable dataForThisVersion={dataForThisVersion} />
+                  <ResultsTable
+                    activeVersion={activeVersion}
+                    dataForThisVersion={dataForThisVersion}
+                  />
                 ),
               },
             ]}

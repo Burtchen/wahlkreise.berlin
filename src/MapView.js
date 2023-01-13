@@ -59,12 +59,12 @@ const MapView = ({
 
       const partyVotes = sortBy(
         [...partiesWithDirectSeats, "AfD", "FDP"].map((name) => ({
-          name,
-          votes: isCustomVersion(activeVersion)
-            ? Object.values(electionDataForTheFederalConstituency).find(
-                (a) => a[CONSTITUENCY] === constituencyNumber
-              )[name]
-            : electionDataForTheFederalConstituency[name],
+            name,
+            votes: isCustomVersion(activeVersion)
+              ? Object.values(electionDataForTheFederalConstituency).find(
+                  (a) => a[CONSTITUENCY] === constituencyNumber
+                )[name]
+              : electionDataForTheFederalConstituency[name],
         })),
         "votes"
       ).reverse();

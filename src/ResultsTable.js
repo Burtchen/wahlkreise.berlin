@@ -1,29 +1,40 @@
 import "./App.css";
 
 import { Table } from "antd";
-import { isNumber, map, max, meanBy, omit, sumBy } from "lodash";
+import { isNumber, isObject, map, max, meanBy, omit, sumBy } from "lodash";
 
 import {
   CONSTITUENCY,
   DEVIATION,
   ELIGIBLE_VOTERS,
   INEFFICIENT_MAJOR_PARTY_VOTES,
+  isCustomVersion,
   partiesWithDirectSeats,
 } from "./App";
 
 const isPartyColumn = (columnName) =>
   [...partiesWithDirectSeats, "AfD", "FDP"].includes(columnName);
 
-function ResultsTable({ dataForThisVersion }) {
-  return (
-    <Table
-      style={{ marginTop: "2rem", maxWidth: "100vw" }}
-      bordered
-      pagination={false}
-      dataSource={dataForThisVersion
-        .slice(1)
-        .map((row, index) => ({ ...row, key: index }))}
-      columns={Object.keys(dataForThisVersion[1]).map((column) => ({
+const ResultsTable = ({ activeVersion, dataForThisVersion }) => (
+  <Table
+    style={{ marginTop: "2rem", maxWidth: "100vw" }}
+    bordered
+    pagination={false}
+    dataSource={
+      isCustomVersion(activeVersion)
+        ? Object.values(dataForThisVersion[0])
+            .filter(isObject)
+            .map((row, index) => ({ ...row, key: index }))
+        : dataForThisVersion
+            .slice(1)
+            .map((row, index) => ({ ...row, key: index }))
+    }
+    columns={Object.keys(
+      isCustomVersion(activeVersion)
+        ? dataForThisVersion[0][0]
+        : dataForThisVersion[1]
+    ).map((column) => {
+      return {
         title: column,
         dataIndex: column,
         key: column,
@@ -58,59 +69,59 @@ function ResultsTable({ dataForThisVersion }) {
               ),
           };
         },
-      }))}
-      summary={(pageData) => {
-        let mainSummaryRow = {};
-        let directVotesRow = {};
-        Object.keys(pageData[0]).forEach((key, index) => {
-          mainSummaryRow[key] =
-            key === CONSTITUENCY
-              ? "Gesamt/ Mittelwert"
-              : key === DEVIATION
-              ? `${meanBy(
-                  pageData.filter((row) => row[DEVIATION] !== -10),
-                  (mV) => Math.abs(isNumber(mV[key]) ? mV[key] : 0)
-                ).toFixed(1)}%`
-              : sumBy(pageData, key)
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-          directVotesRow[key] =
-            index < 3 || index > 8
-              ? null
-              : pageData.filter(
-                  (rowData) =>
-                    rowData[key] ===
-                    Math.max(
-                      ...Object.values(
-                        omit(rowData, [
-                          ELIGIBLE_VOTERS,
-                          INEFFICIENT_MAJOR_PARTY_VOTES,
-                        ])
-                      )
+      };
+    })}
+    summary={(pageData) => {
+      let mainSummaryRow = {};
+      let directVotesRow = {};
+      Object.keys(pageData[0]).forEach((key, index) => {
+        mainSummaryRow[key] =
+          key === CONSTITUENCY
+            ? "Gesamt/ Mittelwert"
+            : key === DEVIATION
+            ? `${meanBy(
+                pageData.filter((row) => row[DEVIATION] !== -10),
+                (mV) => Math.abs(isNumber(mV[key]) ? mV[key] : 0)
+              ).toFixed(1)}%`
+            : sumBy(pageData, key)
+                .toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        directVotesRow[key] =
+          index < 3 || index > 8
+            ? null
+            : pageData.filter(
+                (rowData) =>
+                  rowData[key] ===
+                  Math.max(
+                    ...Object.values(
+                      omit(rowData, [
+                        ELIGIBLE_VOTERS,
+                        INEFFICIENT_MAJOR_PARTY_VOTES,
+                      ])
                     )
-                ).length;
-        });
-        return (
-          <>
-            <Table.Summary.Row>
-              {map(omit(mainSummaryRow, "key"), (summaryCell, index) => (
-                <Table.Summary.Cell key={index} index={index}>
-                  {summaryCell}
-                </Table.Summary.Cell>
-              ))}
-            </Table.Summary.Row>{" "}
-            <Table.Summary.Row>
-              {map(omit(directVotesRow, "key"), (summaryCell, index) => (
-                <Table.Summary.Cell key={index} index={index}>
-                  {summaryCell}
-                </Table.Summary.Cell>
-              ))}
-            </Table.Summary.Row>
-          </>
-        );
-      }}
-    />
-  );
-}
+                  )
+              ).length;
+      });
+      return (
+        <>
+          <Table.Summary.Row>
+            {map(omit(mainSummaryRow, "key"), (summaryCell, index) => (
+              <Table.Summary.Cell key={index} index={index}>
+                {summaryCell}
+              </Table.Summary.Cell>
+            ))}
+          </Table.Summary.Row>{" "}
+          <Table.Summary.Row>
+            {map(omit(directVotesRow, "key"), (summaryCell, index) => (
+              <Table.Summary.Cell key={index} index={index}>
+                {summaryCell}
+              </Table.Summary.Cell>
+            ))}
+          </Table.Summary.Row>
+        </>
+      );
+    }}
+  />
+);
 
 export default ResultsTable;
