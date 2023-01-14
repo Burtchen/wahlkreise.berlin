@@ -25,6 +25,11 @@ const SVGContainer = styled.div`
     g:hover {
       filter: brightness(70%);
     }
+    ${({ hoveredStateConstituency }) => {
+      return `#${hoveredStateConstituency}  {
+        filter: brightness(70%);
+      }`;
+    }};
   }
 `;
 
@@ -32,6 +37,7 @@ const MapView = ({
   activeVersion,
   dataForThisVersion,
   constituencyAssignments,
+  hoveredStateConstituency,
   showResults,
 }) => {
   const federalConstituenciesWithElectionResults = map(
@@ -59,12 +65,12 @@ const MapView = ({
 
       const partyVotes = sortBy(
         [...partiesWithDirectSeats, "AfD", "FDP"].map((name) => ({
-            name,
-            votes: isCustomVersion(activeVersion)
-              ? Object.values(electionDataForTheFederalConstituency).find(
-                  (a) => a[CONSTITUENCY] === constituencyNumber
-                )[name]
-              : electionDataForTheFederalConstituency[name],
+          name,
+          votes: isCustomVersion(activeVersion)
+            ? Object.values(electionDataForTheFederalConstituency).find(
+                (a) => a[CONSTITUENCY] === constituencyNumber
+              )[name]
+            : electionDataForTheFederalConstituency[name],
         })),
         "votes"
       ).reverse();
@@ -110,7 +116,7 @@ const MapView = ({
           />
         </FullWidthElement>
       ) : (
-        <SVGContainer>
+        <SVGContainer hoveredStateConstituency={hoveredStateConstituency}>
           <BerlinMap
             constituencyAssignments={federalConstituenciesWithElectionResults}
             showResults={showResults}

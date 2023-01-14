@@ -412,6 +412,8 @@ function App() {
   const [customSelection, setCustomSelection] = useState(
     districtDataForState // always prepopuluate version 1
   );
+  const [hoveredStateConstituency, setHoveredStateConstituency] =
+    useState(null);
 
   useEffect(() => {
     if (buildModeActive && customSelection.length > 0) {
@@ -539,7 +541,14 @@ function App() {
                             ])?.description
                           }
                         >
-                          <ConstituencyPrefix>
+                          <ConstituencyPrefix
+                            onMouseOver={() =>
+                              setHoveredStateConstituency(
+                                constituency.districtName
+                              )
+                            }
+                            onMouseOut={() => setHoveredStateConstituency(null)}
+                          >
                             {constituency.districtName.split("-0")[1]}
                           </ConstituencyPrefix>
                         </Tooltip>
@@ -645,6 +654,7 @@ function App() {
                     }
                     dataForThisVersion={dataForThisVersion}
                     showResults={false}
+                    hoveredStateConstituency={hoveredStateConstituency}
                   />
                 ),
               },
@@ -665,6 +675,7 @@ function App() {
                     }
                     dataForThisVersion={dataForThisVersion}
                     showResults={true}
+                    hoveredStateConstituency={hoveredStateConstituency}
                   />
                 ),
               },
