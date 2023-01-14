@@ -1,9 +1,20 @@
 import "./App.css";
 
-import { Layout, Select, Radio, Tabs, Button, Row, Col, Alert } from "antd";
+import {
+  Layout,
+  Select,
+  Radio,
+  Tabs,
+  Button,
+  Row,
+  Col,
+  Alert,
+  Tooltip,
+} from "antd";
 import {
   cloneDeep,
   countBy,
+  find,
   flatten,
   groupBy,
   isNumber,
@@ -30,6 +41,7 @@ import Header from "./components/Header";
 import STATE_CONSTITUENCY_ASSIGNMENTS from "./data/StateConstituencies";
 import ELECTION_VERSIONS from "./data/ElectionVersions";
 import STATE_CONSTITUENCIES_WITH_RESULTS from "./data/StateConstituenciesWithResults";
+import STATE_CONSTITUENCIES_WITH_DESCRIPTIONS from "./data/StateConstituenciesWithDescriptions";
 
 export const ELIGIBLE_VOTERS = "Wahlberechtigte";
 export const CONSTITUENCY = "Wahlkreis";
@@ -471,7 +483,8 @@ function App() {
                 ) : (
                   <p style={{ fontSize: "0.8rem" }}>
                     Die Zahl vor dem Dropdown entspricht dem
-                    Abgeordnetenhauswahlkreis des Bezirks. Der Wert des
+                    Abgeordnetenhauswahlkreis des Bezirks - fahren Sie mit der
+                    Maus darüber für eine Ortsbeschreibung. Der Wert des
                     Dropdowns dem Bundestagswahlkreis, den Sie verändern können.
                   </p>
                 )}
@@ -501,7 +514,7 @@ function App() {
                 <Row key={district}>
                   <Col xs={24} xl={4}>
                     <ConstituencyName>
-                      {district.replace("burg", "b'g")}
+                      {district.replace("burg", "b'g").replaceAll("oe", "ö")}
                     </ConstituencyName>
                   </Col>
                   {constituencies.map((constituency) => {
@@ -517,9 +530,19 @@ function App() {
                         xl={2}
                         key={constituency.districtName}
                       >
-                        <ConstituencyPrefix>
-                          {constituency.districtName.split("-0")[1]}
-                        </ConstituencyPrefix>
+                        <Tooltip
+                          color="grey"
+                          title={
+                            find(STATE_CONSTITUENCIES_WITH_DESCRIPTIONS, [
+                              "constituency",
+                              constituency.districtName,
+                            ])?.description
+                          }
+                        >
+                          <ConstituencyPrefix>
+                            {constituency.districtName.split("-0")[1]}
+                          </ConstituencyPrefix>
+                        </Tooltip>
                         <ConstituencySelect
                           value={
                             matchingCustomConstituency &&
@@ -601,7 +624,7 @@ function App() {
             </>
           )}
         </FullWidthElement>
-        <FullWidthElement>
+        <FullWidthElement style={{ textAlign: "center" }}>
           <Tabs
             defaultActiveKey="1"
             items={[
