@@ -27,7 +27,7 @@ const Imprint = () => (
           <br />
           10405 Berlin
           <br />
-          E-Mail: mail@nicolas-scharioth.de
+          E-Mail: kontakt@wahlkreise.info
         </p>
         <p>
           <h3>Programmierung</h3>
