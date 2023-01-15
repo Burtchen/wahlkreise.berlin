@@ -35,7 +35,9 @@ const ResultsTable = ({ activeVersion, dataForThisVersion }) => (
         : dataForThisVersion[1]
     ).map((column) => {
       return {
-        title: column,
+        title: column
+          .replace("GRUENE", "B'90/Grüne")
+          .replace("DIE LINKE", "Die Linke"),
         dataIndex: column,
         key: column,
         render(text, row) {

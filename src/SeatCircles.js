@@ -48,7 +48,11 @@ const SeatCircles = ({ projectedSeats, originalSeats }) => (
     <h2>Direktmandate</h2>
     {partiesWithDirectSeats.map((party) => (
       <PartyList key={party}>
-        <PartyName>{party}</PartyName>
+        <PartyName>
+          {party
+            .replace("GRUENE", "B'90/Grüne")
+            .replace("DIE LINKE", "Die Linke")}
+        </PartyName>
         <div>
           <Tooltip
             title={getTooltipText(projectedSeats[party], originalSeats[party])}

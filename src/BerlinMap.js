@@ -193,7 +193,10 @@ const BerlinMap = ({ constituencyAssignments, showResults }) => (
             <ul style={{ listStyle: "none", marginLeft: 0, paddingLeft: 0 }}>
               {constituencyData.votes.map((partyResult) => (
                 <li>
-                  {partyResult.name}:{" "}
+                  {partyResult.name
+                    .replace("GRUENE", "Bündnis 90/Die Grünen")
+                    .replace("DIE LINKE", "Die Linke")}
+                  :{" "}
                   {partyResult.votes
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
