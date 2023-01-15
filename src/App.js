@@ -436,7 +436,11 @@ function App() {
         <FullWidthElement>
           <p>
             Im Rahmen des{" "}
-            <a href="https://www.bundestag.de/dokumente/textarchiv/2022/kw45-pa-kommission-wahlrecht-wahlrechtsreform-918172">
+            <a
+              href="https://www.bundestag.de/dokumente/textarchiv/2022/kw45-pa-kommission-wahlrecht-wahlrechtsreform-918172"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
               Neuzuschnitts der Wahlkreise für künftige Bundestagswahlen
             </a>{" "}
             verliert Berlin einen seiner zwölf Wahlkreise. Bisher hatte Berlin
@@ -448,7 +452,7 @@ function App() {
             Vorschläge vorgelegt. Diese Seite stellt diese Varianten und ihre
             Auswirkungen auf die direkt gewählten Sitze (Erststimme) im
             Vergleich mit der bestehenden Zusammensetzung sowie vorgeschlagenen
-            Alternativen vor.
+            Alternativen vor und lässt Sie selbst eigene Varianten bauen.
           </p>
         </FullWidthElement>
         {buildModeActive && (
@@ -484,10 +488,18 @@ function App() {
                   </label>
                 ) : (
                   <p style={{ fontSize: "0.8rem" }}>
-                    Die Zahl vor dem Dropdown entspricht dem
+                    Die Zahl vor dem Dropdown-Menü entspricht dem
                     Abgeordnetenhauswahlkreis des Bezirks - fahren Sie mit der
-                    Maus darüber für eine Ortsbeschreibung. Der Wert des
-                    Dropdowns dem Bundestagswahlkreis, den Sie verändern können.
+                    Maus darüber für eine Ortsbeschreibung (
+                    <a
+                      href="https://de.wikipedia.org/wiki/Liste_der_Abgeordnetenhauswahlkreise_in_Berlin_2021"
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      Quelle
+                    </a>
+                    ). Der Wert des Dropdowns ist dem Bundestagswahlkreis -
+                    diesen können Sie verändern.
                   </p>
                 )}
               </Col>
