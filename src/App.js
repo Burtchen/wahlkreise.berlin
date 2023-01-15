@@ -483,7 +483,12 @@ function App() {
                 />
               </Col>
               <Col span={4}>
-                <Button onClick={() => setBuildModeActive(false)}>
+                <Button
+                  onClick={() => {
+                    setBuildModeActive(false);
+                    setActiveVersion(titles[0]);
+                  }}
+                >
                   Zurück zur Übersicht
                 </Button>
               </Col>
