@@ -155,6 +155,9 @@ export const StyledContent = styled(Content)`
 
 const StyledRadioGroup = styled(RadioGroup)`
   margin-bottom: 1rem;
+  :nth-of-type(3) .ant-radio-button-wrapper {
+    border: 1px dotted #4096ff;
+  }
   @media (max-width: 1023px) {
     display: none;
   }
@@ -254,19 +257,21 @@ const variantGroups = [
   },
   {
     label: "Vorschläge der Landeswahlleitung",
-    options: [...titles.slice(1, 3)].map((title) => {
-      return { label: title, value: title };
-    }),
+    options: [...titles.slice(1, 3)].map((title) => ({
+      label: title,
+      value: title,
+    })),
+  },
+  {
+    label: "SimLandesWahlleitung",
+    options: [{ label: "Eigene Variante bauen!", value: null }],
   },
   {
     label: "Eigene Vorschläge",
-    options: [
-      ...[...titles.slice(3, 7)].map((title) => ({
-        label: title.replace("Variante", "").replaceAll("ue", "ü"),
-        value: title,
-      })),
-      { label: "Eigene Variante bauen!", value: null },
-    ],
+    options: [...titles.slice(3, 7)].map((title) => ({
+      label: title.replace("Variante", "").replaceAll("ue", "ü"),
+      value: title,
+    })),
   },
 ];
 
