@@ -464,9 +464,13 @@ function App() {
           <FullWidthElement style={{ marginBottom: "2rem" }}>
             <h3>Meine Wahlkreissimulation</h3>
             <Row>
-              <Col span={24}>
+              <Col span={20}>
                 <Select
-                  style={{ minWidth: "200px", marginBottom: "0.75rem" }}
+                  style={{
+                    minWidth: "200px",
+                    marginBottom: "0.75rem",
+                    marginRight: "1rem",
+                  }}
                   value={visibleDistricts}
                   mode="multiple"
                   id="district-selector"
@@ -478,7 +482,11 @@ function App() {
                   onChange={setVisibleDistricts}
                 />
               </Col>
-              <Col span={24}></Col>
+              <Col span={4}>
+                <Button onClick={() => setBuildModeActive(false)}>
+                  Zurück zur Übersicht
+                </Button>
+              </Col>
               <Col span={24}>
                 {visibleDistricts.length < 1 ? (
                   <label
