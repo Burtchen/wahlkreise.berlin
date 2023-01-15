@@ -462,7 +462,7 @@ function App() {
         </FullWidthElement>
         {buildModeActive && (
           <FullWidthElement style={{ marginBottom: "2rem" }}>
-            <h3>SimLandeswahlleitung: Eigene Version bauen!</h3>
+            <h3>Meine Wahlkreissimulation</h3>
             <Row>
               <Col span={24}>
                 <Select
@@ -478,6 +478,7 @@ function App() {
                   onChange={setVisibleDistricts}
                 />
               </Col>
+              <Col span={24}></Col>
               <Col span={24}>
                 {visibleDistricts.length < 1 ? (
                   <label
@@ -513,13 +514,14 @@ function App() {
               (deviationForConstituency) =>
                 isNumber(deviationForConstituency) &&
                 Math.abs(deviationForConstituency) > 1.5
-            ).length > 0 && (
-              <Alert
-                message="Die Größe mindestens eines Wahlkreises weicht um mehr als 15% vom Mittelwert ab."
-                type="warning"
-                style={{ marginBottom: "1rem" }}
-              />
-            )}
+            ).length > 0 &&
+              false && (
+                <Alert
+                  message="Die Größe mindestens eines Wahlkreises weicht um mehr als 15% vom Mittelwert ab."
+                  type="warning"
+                  style={{ marginBottom: "1rem" }}
+                />
+              )}
             {Object.keys(omit(dataForThisVersion[0], "title")).length > 11 && (
               <Alert
                 message="Sie haben mehr als 11 Bundestagswahlkreise ausgewählt - die Reduktion auf 11 ist aber genau das Anliegen der Reform."
@@ -600,6 +602,14 @@ function App() {
                   })}
                 </Row>
               ))}
+            {visibleDistricts.length > 1 && (
+              <p style={{ fontSize: "0.8rem" }}>
+                Der interne Code Ihrer Auswahl ist <code>{activeVersion}</code>.
+                In den nächsten Tag werden wir es ermöglichen, Codes direkt oder
+                per URL zu teilen. Sie können sich diesen Code bereits merken
+                und später wieder nutzen.
+              </p>
+            )}
           </FullWidthElement>
         )}
         <FullWidthElement
