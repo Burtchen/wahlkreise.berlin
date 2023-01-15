@@ -57,6 +57,14 @@ const Privacy = () => (
           Auskunftserteilung für Zwecke der Strafverfolgung, zur Gefahrenabwehr
           oder zur Durchsetzung geistiger Eigentumsrechte handeln.
         </p>
+        <h3>Verwendung von Cookies</h3>
+        <p>
+          Es gibt eine Technik, genannt „Cookies“, mit deren Hilfe Informationen
+          aus einer Website an persönliche Bedürfnisse angepasst werden können.
+          Ein Cookie ist ein Datenelement, das eine Website an den Browser
+          schicken kann, um es dort auf dem System zu speichern. Gelegentlich
+          werden auch temporäre Cookies genutzt.
+        </p>
         <h3>Links zu anderen Webseiten</h3>
         <p>
           Diese Website enthält Links zu externen Webseiten Dritter, auf deren
